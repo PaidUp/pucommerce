@@ -16,6 +16,7 @@ it('POST# / create an order', done => {
       res.should.have.status(200)
       res.body.should.have.property('organizationId')
       res.body.should.have.property('organizationName')
+      res.body.should.have.property('customInfo')
       done()
     })
 })

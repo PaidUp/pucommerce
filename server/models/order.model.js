@@ -1,5 +1,11 @@
 import CommonModel from './common.model'
 
+const customInfo = {
+  label: { type: String, required: true },
+  value: { type: String, required: true },
+  displayed: { type: Boolean, required: true }
+}
+
 const schema = {
   organizationId: { type: String, required: true },
   organizationName: { type: String, required: true },
@@ -8,6 +14,7 @@ const schema = {
   productImage: { type: String, required: true },
   beneficiaryId: { type: String, required: true },
   beneficiaryName: { type: String, required: true },
+  customInfo: { type: [customInfo], default: [] },
   status: { type: String, required: true, enum: ['active', 'inactive'] }
 }
 

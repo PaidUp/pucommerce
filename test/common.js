@@ -16,6 +16,18 @@ let request = {
       productImage: 'https://images....',
       beneficiaryId: 'zzzzzzzz',
       beneficiaryName: 'beneficiary test',
+      customInfo: [
+        {
+          label: 'age',
+          value: '12',
+          displayed: true
+        },
+        {
+          label: 'food',
+          value: 'lasagna',
+          displayed: false
+        }
+      ],
       status: 'active'
     }
   }

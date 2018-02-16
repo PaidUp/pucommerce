@@ -1,56 +1,53 @@
 import CommonModel from './common.model'
 
-const contact = {
-  label: { type: String, required: true, enum: ['work', 'home'] },
-  phone: { type: String, required: true },
-  address1: { type: String, required: true },
-  address2: { type: String },
-  city: { type: String, required: true },
-  state: { type: String, required: true },
-  country: { type: String, required: true, default: [ 'USA' ] },
-  zipCode: { type: String, required: true }
+const user = {
+  userId: { type: String, required: true },
+  userFirstName: { type: String, required: true },
+  userLastName: { type: String, required: true },
+  userEmail: { type: String, required: true }
 }
 
-const verify = {
-  token: { type: String, required: true },
-  updatedAt: { type: Date, default: Date.now },
-  status: { type: String, required: true }
+const payFees = {
+  collections: { type: Boolean, required: true },
+  processing: { type: Boolean, required: true }
 }
 
-const resetPassword = {
-  token: { type: String, required: true },
-  updatedAt: { type: Date, default: Date.now },
-  status: { type: String, required: true }
+const processingFees = {
+  cardFee: { type: Number, required: true },
+  cardFeeFlat: { type: Number, required: true },
+  achFee: { type: Number, required: true },
+  achFeeFlat: { type: Number, required: true },
+  achFeeCap: { type: Number, required: true }
+}
+
+const paymentDetails = {
+  externalCustommerId: { type: String, required: true },
+  type: { type: String, required: true, enum: ['card', 'bank'] },
+  externalPaymentMethodId: { type: String, required: true },
+  brand: { type: String, required: true },
+  last4: { type: String, required: true }
 }
 
 const schema = {
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  birthDate: { type: Date },
-  email: { type: String, lowercase: true, required: true },
-  hashedPassword: { type: String },
-  salt: { type: String },
-  type: { type: String, required: true, enum: [ 'customer', 'functionary', 'organization', 'api', 'service' ] },
-  facebookId: { type: String },
-  organizationId: { type: String },
-  externalAccountId: { type: String },
-  contacts: { type: [ contact ], default: [] },
-  resetPassword: { type: resetPassword },
-  verify: { type: verify },
-  roles: { type: Array, default: [ 'parent' ], enum: ['parent', 'coach', 'director'] }
+  invoiceId: { type: String, required: true },
+  orderId: { type: String, required: true },
+  label: { type: String, required: true },
+  connectAccount: { type: String, required: true },
+  dataCharge: { type: Date, required: true },
+  chargedOn: { type: Date },
+  chargeId: { type: String },
+  price: { type: Number, required: true },
+  priceBase: { type: Number, required: true },
+  paidupFee: { type: Number, required: true },
+  user: { type: user, required: true },
+  processingFees: { type: processingFees, required: true },
+  payFees: { type: payFees, required: true },
+  paymentDetails: {type: paymentDetails, required: true},
+  status: { type: String, required: true, enum: ['pending', 'charged'] }
 }
 
 export default class OrganizationModel extends CommonModel {
   constructor () {
-    super('user', 'users', schema)
-
-    this.schema.path('email').validate(async function (value) {
-      try {
-        let user = await this.constructor.findOne({ email: value })
-        return user === null
-      } catch (error) {
-        return false
-      }
-    }, 'The specified email address is already in use.')
+    super('invoice', 'invoices', schema)
   }
 }
