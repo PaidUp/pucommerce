@@ -45,7 +45,13 @@ let all = {
     logName: 'pu-product-dev-log',
     metadata: {resource: {type: 'global'}}
   },
-  encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ=='
+  encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==',
+  api: {
+    organization: {
+      url: 'localhost',
+      port: 9002
+    }
+  }
 }
 
 if (process.env.NODE_ENV) {
