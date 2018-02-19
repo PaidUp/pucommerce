@@ -4,10 +4,10 @@ import mongoose from 'mongoose'
 import config from './config/environment'
 import configExpress from './config/express'
 import routes from './routes'
-import Logger from './util/logger'
-import { setCredential } from '@/util/auth'
+import { Auth, Logger } from 'pu-common'
 
-setCredential(config.secrets.session)
+Auth.setCredential(config.auth)
+Logger.setConfig(config.logger)
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
@@ -46,6 +46,9 @@ process.on('unhandledRejection', (err) => {
 })
 process.on('uncaughtException', (err) => {
   Logger.critical(err)
+  if (process.env.NODE_ENV === 'test') {
+    process.exit(1)
+  }
 })
 
 export default server

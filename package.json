@@ -26,9 +26,8 @@
   "author": "@paidUp",
   "license": "private",
   "dependencies": {
-    "@google-cloud/logging": "^1.1.2",
+    "pu-common": "git+ssh://git@github.com:PaidUp/PUCommon.git#0.11.2",
     "axios": "^0.17.1",
-    "blind": "^1.0.0",
     "body-parser": "^1.14.1",
     "camelize": "^1.0.0",
     "composable-middleware": "^0.3.0",
@@ -36,18 +35,12 @@
     "cookie-parser": "^1.4.0",
     "cors": "^2.8.4",
     "express": "^4.13.4",
-    "fb": "^2.0.0",
-    "jsonwebtoken": "^8.1.1",
     "lodash": "^4.11.1",
-    "mathjs": "^3.20.2",
     "method-override": "^2.3.5",
     "moment": "^2.20.1",
     "mongoose": "^5.0.1",
     "node-uuid": "^1.4.8",
-    "passport-facebook": "^2.1.1",
-    "passport-local": "^1.0.0",
-    "pmx": "^0.6.1",
-    "redis": "^2.8.0"
+    "pmx": "^0.6.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

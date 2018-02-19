@@ -50,4 +50,13 @@ export default class OrganizationModel extends CommonModel {
   constructor () {
     super('invoice', 'invoices', schema)
   }
+
+  insertMany (arr) {
+    return new Promise((resolve, reject) => {
+      this.ModelinsertMany(arr, (error, docs) => {
+        if (error) return reject(error)
+        resolve(docs)
+      })
+    })
+  }
 }

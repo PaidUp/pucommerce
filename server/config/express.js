@@ -7,7 +7,7 @@ import bodyParser from 'body-parser'
 import methodOverride from 'method-override'
 import cookieParser from 'cookie-parser'
 import mongoose from 'mongoose'
-import Logger from '@/util/logger'
+import Logger from 'pu-common'
 var pmx = require('pmx')
 
 export default function (app) {

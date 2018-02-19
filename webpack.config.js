@@ -6,7 +6,8 @@ let wpc = {
   target: 'node',
   externals: [nodeExternals()],
   entry: './server/app.js',
-  devtool: '#eval',
+  // devtool: '#eval',
+  devtool: 'source-map',
 
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -36,7 +37,7 @@ let wpc = {
   },
   plugins: [
     new NodemonPlugin({
-      nodeArgs: ['--inspect=0.0.0.0:9228']
+      nodeArgs: ['--inspect=0.0.0.0:9227']
     })
   ]
 }

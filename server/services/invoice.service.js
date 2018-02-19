@@ -7,4 +7,8 @@ export default class UserService extends CommonService {
   constructor () {
     super(invoiceModel)
   }
+
+  insertMany (arr) {
+    return invoiceModel.insertMany(arr).then(docs => docs)
+  }
 }

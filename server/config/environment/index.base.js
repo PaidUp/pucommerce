@@ -32,13 +32,10 @@ let all = {
       poolSize: 5 // Maintain up to 10 socket connections
     }
   },
-  redis: {
+  auth: {
+    credential: 'puproduct-secret',
     host: 'redis-13835.c16.us-east-1-3.ec2.cloud.redislabs.com',
     port: 13835
-  },
-  // Secret for session, you will want to change this and make it an environment variable
-  secrets: {
-    session: 'puproduct-secret'
   },
   logger: {
     projectId: 'gothic-talent-192920',

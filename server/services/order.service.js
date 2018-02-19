@@ -1,7 +1,7 @@
 import { OrderModel } from '@/models'
 import CommonService from './common.service'
 import axios from 'axios'
-// import Calculations from '@/util'
+import Calculations from 'pu-common'
 
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImNvbnRhY3RzIjpbXSwicm9sZXMiOlsicGFyZW50Il0sImNyZWF0ZU9uIjoiMjAxOC0wMi0xNVQxODoxNjoyNS43NTBaIiwidXBkYXRlT24iOiIyMDE4LTAyLTE1VDE4OjE2OjI1Ljc1MFoiLCJfaWQiOiI1YTg1Y2U3OTU5MWU4NzIxMThiOTkzOGMiLCJmaXJzdE5hbWUiOiJ0ZXN0IiwibGFzdE5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QGdldHBhaWR1cC5jb20iLCJ0eXBlIjoiY3VzdG9tZXIiLCJzYWx0IjoiZDhoVmh1UzZMSmgrV2gvMWpqMWYvQT09IiwiaGFzaGVkUGFzc3dvcmQiOiJTVkN5b0RRcVVmWS9McWdIUmFqanU1RGhDTVd3UU9oTlJzSDRNTzhoZjExZ2g3K1QwbmRIbmRnbjV4UDYvOHlKMTVYRmZBanFhKzliTGNWRmRMcDdqdz09IiwiX192IjowfSwiaWF0IjoxNTE4NzE4NjIzLCJleHAiOjM0MTA4Nzg2MjN9.tLvpo_aejNOB4fuIHvYHxdTBkEWxjGT0nspqtX2yzUQ'
 
@@ -23,7 +23,7 @@ function getPlanData (planId) {
 
 function getBeneficiary (beneficiaryId) {
   return new Promise((resolve, reject) => {
-    axios.get('https://devapi.getpaidup.com/api/v1/organization/plan/5a859d2103db500098c46dda/join')
+    axios.get('https://devapi.getpaidup.com/api/v1/organization/beneficiary/5a871f393ae525274595abab')
       .then(response => {
         resolve(response.data)
       })
@@ -73,6 +73,7 @@ function buildInvoices (orderId, organization, product, plan, beneficiary, param
   let { user, type, externalPaymentMethodId, brand, last4 } = params
   let res = []
   for (let due of plan.dues) {
+    let calculation = calc(type, product, due)
     res.push({
       invoiceId: 'xxxx',
       orderId,
@@ -80,8 +81,8 @@ function buildInvoices (orderId, organization, product, plan, beneficiary, param
       connectAccount: organization.connectAccount,
       dataCharge: due.dataCharge,
       price: due.amount,
-      priceBase: 0,
-      paidupFee: 0,
+      priceBase: calculation.priceBase,
+      paidupFee: calculation.paidupFee,
       user: {
         userId: user._id,
         userFirstName: user.firstName,
@@ -102,15 +103,18 @@ function buildInvoices (orderId, organization, product, plan, beneficiary, param
   return res
 }
 
-// function calc (type, product) {
-//   let res = {
-//     priceBase: 0,
-//     paidupFee: 0
-//   }
-//   let { processingFees, collectionFees, payFees } = product
-//   res = calc[type](fees)
-//   return res
-// }
+function calc (type, product, due) {
+  let res = {
+    priceBase: 0,
+    paidupFee: 0
+  }
+  if (type === 'card') {
+    res = Calculations.card(product, due)
+  } else if (type === 'bank') {
+    res = Calculations.bank(product, due)
+  }
+  return res
+}
 
 export default class UserService extends CommonService {
   constructor () {
