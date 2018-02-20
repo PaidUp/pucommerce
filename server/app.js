@@ -4,10 +4,11 @@ import mongoose from 'mongoose'
 import config from './config/environment'
 import configExpress from './config/express'
 import routes from './routes'
-import { Auth, Logger } from 'pu-common'
+import { Auth, Logger, Sequence } from 'pu-common'
 
 Auth.setCredential(config.auth)
 Logger.setConfig(config.logger)
+Sequence.setConfig(config.sequence)
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 

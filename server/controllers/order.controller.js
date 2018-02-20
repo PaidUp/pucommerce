@@ -1,6 +1,6 @@
 import { OrderService } from '@/services'
 import { HandlerResponse } from 'pu-common'
-const orderService = new OrderService()
+const orderService = OrderService.getInstance()
 
 export default class OrganizationCotroller {
   static save (req, res) {
@@ -13,35 +13,35 @@ export default class OrganizationCotroller {
   }
 
   static generate (req, res) {
-    if (!res.body.planId) {
+    if (!req.body.planId) {
       HandlerResponse.error(res, 'planId is required', 422)
     }
-    if (!res.body.beneficiaryId) {
+    if (!req.body.beneficiaryId) {
       HandlerResponse.error(res, 'beneficiaryId is required', 422)
     }
-    if (!res.body.type) {
+    if (!req.body.paymentMethodtype) {
       HandlerResponse.error(res, 'type is required', 422)
     }
-    if (res.body.type !== 'bank' && res.type !== 'card') {
+    if (req.body.paymentMethodtype !== 'bank' && req.body.paymentMethodtype !== 'card') {
       HandlerResponse.error(res, 'type must be card or bank', 422)
     }
-    if (!res.body.externalPaymentMethodId) {
+    if (!req.body.externalPaymentMethodId) {
       HandlerResponse.error(res, 'externalPaymentMethodId is required', 422)
     }
-    if (!res.body.brand) {
+    if (!req.body.brand) {
       HandlerResponse.error(res, 'brand is required', 422)
     }
-    if (!res.body.last4) {
+    if (!req.body.last4) {
       HandlerResponse.error(res, 'last4 is required', 422)
     }
-    if (!res.user) {
+    if (!req.user) {
       HandlerResponse.error(res, 'user is required', 401)
     }
-    if (res.body.customInfo) {
-      if (!Array.isArray(res.body.customInfo)) {
+    if (req.body.customInfo) {
+      if (!Array.isArray(req.body.customInfo)) {
         HandlerResponse.error(res, 'customInfo must be an array', 422)
       }
-      for (let ci of res.body.customInfo) {
+      for (let ci of req.body.customInfo) {
         if (!ci.label) {
           HandlerResponse.error(res, 'customInfo.label is required', 422)
         }

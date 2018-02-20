@@ -37,6 +37,12 @@ let all = {
     host: 'redis-13835.c16.us-east-1-3.ec2.cloud.redislabs.com',
     port: 13835
   },
+  sequence: {
+    functionName: 'sequence-dev:3',
+    db: '1',
+    host: 'develop.rd7ge9.ng.0001.use1.cache.amazonaws.com',
+    port: '6379'
+  },
   logger: {
     projectId: 'gothic-talent-192920',
     logName: 'pu-product-dev-log',

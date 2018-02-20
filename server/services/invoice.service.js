@@ -1,14 +1,20 @@
 import { InvoiceModel } from '@/models'
 import CommonService from './common.service'
 
-const invoiceModel = new InvoiceModel()
+let invoiceService
 
-export default class UserService extends CommonService {
+export default class InvoiceService extends CommonService {
   constructor () {
-    super(invoiceModel)
+    super(new InvoiceModel())
+  }
+  static getInstance () {
+    if (!invoiceService) {
+      invoiceService = new InvoiceService()
+    }
+    return invoiceService
   }
 
   insertMany (arr) {
-    return invoiceModel.insertMany(arr).then(docs => docs)
+    return this.model.insertMany(arr).then(docs => docs)
   }
 }

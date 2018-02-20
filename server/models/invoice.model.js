@@ -22,7 +22,7 @@ const processingFees = {
 
 const paymentDetails = {
   externalCustommerId: { type: String, required: true },
-  type: { type: String, required: true, enum: ['card', 'bank'] },
+  paymentMethodtype: { type: String, required: true, enum: ['card', 'bank'] },
   externalPaymentMethodId: { type: String, required: true },
   brand: { type: String, required: true },
   last4: { type: String, required: true }
@@ -41,19 +41,19 @@ const schema = {
   paidupFee: { type: Number, required: true },
   user: { type: user, required: true },
   processingFees: { type: processingFees, required: true },
+  paymentDetails: { type: paymentDetails, required: true },
   payFees: { type: payFees, required: true },
-  paymentDetails: {type: paymentDetails, required: true},
   status: { type: String, required: true, enum: ['pending', 'charged'] }
 }
 
-export default class OrganizationModel extends CommonModel {
+export default class InvoiceModel extends CommonModel {
   constructor () {
     super('invoice', 'invoices', schema)
   }
 
   insertMany (arr) {
     return new Promise((resolve, reject) => {
-      this.ModelinsertMany(arr, (error, docs) => {
+      this.Model.insertMany(arr, (error, docs) => {
         if (error) return reject(error)
         resolve(docs)
       })

@@ -14,9 +14,10 @@ it('POST# / create an order', done => {
     .send(common.request.order.orderForm)
     .end((err, res) => {
       res.should.have.status(200)
-      res.body.should.have.property('organizationId')
-      res.body.should.have.property('organizationName')
-      res.body.should.have.property('customInfo')
+      res.body.should.to.be.an('array')
+      res.body[0].should.have.property('_id')
+      res.body[0].should.have.property('invoiceId')
+      res.body[0].should.have.property('orderId')
       done()
     })
 })

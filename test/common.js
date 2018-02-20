@@ -9,26 +9,19 @@ var uuid = require('node-uuid')
 let request = {
   order: {
     orderForm: {
-      organizationId: 'xxxxxxx',
-      organizationName: 'organization test',
-      productId: 'yyyyyyyy',
-      productName: 'product test',
-      productImage: 'https://images....',
-      beneficiaryId: 'zzzzzzzz',
-      beneficiaryName: 'beneficiary test',
+      planId: 'yyyyyy',
+      beneficiaryId: 'xxxxx',
+      paymentMethodtype: 'card',
+      externalPaymentMethodId: 'zzzzz',
+      brand: 'visa',
+      last4: '1111',
       customInfo: [
         {
           label: 'age',
           value: '12',
           displayed: true
-        },
-        {
-          label: 'food',
-          value: 'lasagna',
-          displayed: false
         }
-      ],
-      status: 'active'
+      ]
     }
   }
 }
