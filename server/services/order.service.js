@@ -41,11 +41,13 @@ function prepareOrder (params) {
   return new Promise((resolve, reject) => {
     Promise.all([
       getPlanData(planId),
-      getBeneficiary(bebeficiaryId)
+      getBeneficiary(bebeficiaryId),
+      Sequence.next('order')
     ]).then(values => {
       let { organization, product, plan } = values[0]
       let beneficiary = values[1]
-      let payload = buildOrder(organization, product, plan, beneficiary, params.customInfo)
+      let orderId = values[2].ids[0]
+      let payload = buildOrder(orderId, organization, product, plan, beneficiary, params.customInfo)
       resolve({
         payload,
         organization,
@@ -57,8 +59,9 @@ function prepareOrder (params) {
   })
 }
 
-function buildOrder (organization, product, plan, beneficiary, customInfo) {
+function buildOrder (orderId, organization, product, plan, beneficiary, customInfo) {
   return {
+    orderId,
     organizationId: organization._id,
     organizationName: organization.businessName,
     productId: product._id,

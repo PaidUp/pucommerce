@@ -7,6 +7,7 @@ const customInfo = {
 }
 
 const schema = {
+  orderId: { type: String, required: true },
   organizationId: { type: String, required: true },
   organizationName: { type: String, required: true },
   productId: { type: String, required: true },
