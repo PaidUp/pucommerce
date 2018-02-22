@@ -15,6 +15,7 @@ const schema = {
   productImage: { type: String, required: true },
   beneficiaryId: { type: String, required: true },
   beneficiaryName: { type: String, required: true },
+  season: { type: String, required: true },
   customInfo: { type: [customInfo], default: [] },
   status: { type: String, required: true, enum: ['active', 'inactive'] }
 }
