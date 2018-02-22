@@ -1,13 +1,11 @@
 import CommonModel from './common.model'
 
 const customInfo = {
-  label: { type: String, required: true },
-  value: { type: String, required: true },
-  displayed: { type: Boolean, required: true }
+  model: { type: String, required: true },
+  value: { type: String, required: true }
 }
 
 const schema = {
-  orderId: { type: String, required: true },
   organizationId: { type: String, required: true },
   organizationName: { type: String, required: true },
   productId: { type: String, required: true },
@@ -15,8 +13,13 @@ const schema = {
   productImage: { type: String, required: true },
   beneficiaryId: { type: String, required: true },
   beneficiaryName: { type: String, required: true },
-  customInfo: { type: [customInfo], default: [] },
-  status: { type: String, required: true, enum: ['active', 'inactive'] }
+  planId: { type: String, required: true },
+  planDescription: { type: String, required: true },
+  assigneeEmail: { type: String, required: true },
+  customInfo: { type: [customInfo] },
+  status: { type: String, required: true, enum: ['active', 'inactive'] },
+  createOn: { type: Date, default: Date.now },
+  updateOn: { type: Date, default: Date.now }
 }
 
 export default class OrderModel extends CommonModel {
