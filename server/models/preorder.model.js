@@ -20,8 +20,8 @@ const schema = {
   status: { type: String, required: true, enum: ['active', 'inactive'] }
 }
 
-export default class OrderModel extends CommonModel {
+export default class PreorderModel extends CommonModel {
   constructor () {
-    super('order', 'orders', schema)
+    super('preorder', 'preorders', schema)
   }
 }

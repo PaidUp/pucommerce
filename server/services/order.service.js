@@ -69,6 +69,7 @@ function buildOrder (orderId, organization, product, plan, beneficiary, customIn
     productId: product._id,
     productName: product.name,
     productImage: product.image,
+    season: product.season,
     beneficiaryId: beneficiary._id,
     beneficiaryName: beneficiary.name,
     customInfo: customInfo,
@@ -134,13 +135,6 @@ class OrderService extends CommonService {
     super(new OrderModel())
   }
 
-  static get instance () {
-    if (!orderService) {
-      orderService = new OrderService()
-    }
-    return orderService
-  }
-
   save (entity) {
     return new Promise((resolve, reject) => {
       this.model.save(entity).then(entity => {
@@ -163,4 +157,6 @@ class OrderService extends CommonService {
   }
 }
 
-export default OrderService.instance
+orderService = new OrderService()
+
+export default orderService
