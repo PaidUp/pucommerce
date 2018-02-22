@@ -1,5 +1,5 @@
-import OrderService from './order.service'
+import orderService from './order.service'
 
 export {
-  OrderService
+  orderService
 }

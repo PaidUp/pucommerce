@@ -4,9 +4,9 @@ import mongoose from 'mongoose'
 import config from './config/environment'
 import configExpress from './config/express'
 import routes from './routes'
-import { Auth, Logger, Sequence } from 'pu-common'
+import { auth, Logger, Sequence } from 'pu-common'
 
-Auth.setCredential(config.auth)
+auth.config = config.auth
 Logger.setConfig(config.logger)
 Sequence.setConfig(config.sequence)
 

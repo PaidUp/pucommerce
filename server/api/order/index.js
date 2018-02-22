@@ -1,8 +1,8 @@
 import express from 'express'
 import { OrderController } from '@/controllers'
-import { Auth } from 'pu-common'
+import { auth } from 'pu-common'
 
 const router = express.Router()
-router.post('/order', Auth.validate, OrderController.generate)
+router.post('/order', auth.validate, OrderController.generate)
 
 export default router

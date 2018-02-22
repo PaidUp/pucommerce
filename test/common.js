@@ -9,8 +9,8 @@ var uuid = require('node-uuid')
 let request = {
   order: {
     orderForm: {
-      planId: 'yyyyyy',
-      beneficiaryId: 'xxxxx',
+      planId: '5a859d2103db500098c46dda',
+      beneficiaryId: '5a871f393ae525274595abab',
       paymentMethodtype: 'card',
       externalPaymentMethodId: 'zzzzz',
       brand: 'visa',

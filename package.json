@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "node dist/build.js",
-    "test": "export NODE_ENV=test && mocha --timeout 10000 --compilers js:babel-core/register ./test/**/*.spec.js",
+    "test": "export NODE_ENV=test && mocha --timeout 20000 --compilers js:babel-core/register ./test/**/*.spec.js",
     "jenkins": "npm test",
     "dev": "export NODE_ENV=local && webpack --watch",
     "compile": "babel --source-maps -d compile/ server/"
@@ -26,7 +26,7 @@
   "author": "@paidUp",
   "license": "private",
   "dependencies": {
-    "pu-common": "git+ssh://git@github.com:PaidUp/PUCommon.git#0.13.1",
+    "pu-common": "git+ssh://git@github.com:PaidUp/PUCommon.git#0.15.2",
     "axios": "^0.17.1",
     "body-parser": "^1.14.1",
     "camelize": "^1.0.0",

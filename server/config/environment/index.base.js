@@ -35,7 +35,8 @@ let all = {
   auth: {
     credential: 'puproduct-secret',
     host: 'redis-13835.c16.us-east-1-3.ec2.cloud.redislabs.com',
-    port: 13835
+    port: 13835,
+    key: 'JF06f7FJjTDkNOcM1sdywWw5CZBHW4Jy'
   },
   sequence: {
     functionName: 'sequence-dev:3',
@@ -51,8 +52,7 @@ let all = {
   encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==',
   api: {
     organization: {
-      url: 'localhost',
-      port: 9002
+      url: 'http://localhost:9002/api/v1/organization'
     }
   }
 }

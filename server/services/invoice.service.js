@@ -3,11 +3,11 @@ import CommonService from './common.service'
 
 let invoiceService
 
-export default class InvoiceService extends CommonService {
+class InvoiceService extends CommonService {
   constructor () {
     super(new InvoiceModel())
   }
-  static getInstance () {
+  static get instance () {
     if (!invoiceService) {
       invoiceService = new InvoiceService()
     }
@@ -18,3 +18,5 @@ export default class InvoiceService extends CommonService {
     return this.model.insertMany(arr).then(docs => docs)
   }
 }
+
+export default InvoiceService.instance

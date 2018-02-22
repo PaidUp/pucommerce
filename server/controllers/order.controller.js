@@ -1,6 +1,5 @@
-import { OrderService } from '@/services'
+import { orderService } from '@/services'
 import { HandlerResponse } from 'pu-common'
-const orderService = OrderService.getInstance()
 
 export default class OrganizationCotroller {
   static save (req, res) {

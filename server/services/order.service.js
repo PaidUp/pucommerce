@@ -2,17 +2,20 @@ import { OrderModel } from '@/models'
 import CommonService from './common.service'
 import axios from 'axios'
 import { Calculations, Sequence } from 'pu-common'
-import InvoiceService from './invoice.service'
+import invoiceService from './invoice.service'
+import config from '@/config/environment'
 
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImNvbnRhY3RzIjpbXSwicm9sZXMiOlsicGFyZW50Il0sImNyZWF0ZU9uIjoiMjAxOC0wMi0xNVQxODoxNjoyNS43NTBaIiwidXBkYXRlT24iOiIyMDE4LTAyLTE1VDE4OjE2OjI1Ljc1MFoiLCJfaWQiOiI1YTg1Y2U3OTU5MWU4NzIxMThiOTkzOGMiLCJmaXJzdE5hbWUiOiJ0ZXN0IiwibGFzdE5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QGdldHBhaWR1cC5jb20iLCJ0eXBlIjoiY3VzdG9tZXIiLCJzYWx0IjoiZDhoVmh1UzZMSmgrV2gvMWpqMWYvQT09IiwiaGFzaGVkUGFzc3dvcmQiOiJTVkN5b0RRcVVmWS9McWdIUmFqanU1RGhDTVd3UU9oTlJzSDRNTzhoZjExZ2g3K1QwbmRIbmRnbjV4UDYvOHlKMTVYRmZBanFhKzliTGNWRmRMcDdqdz09IiwiX192IjowfSwiaWF0IjoxNTE4NzE4NjIzLCJleHAiOjM0MTA4Nzg2MjN9.tLvpo_aejNOB4fuIHvYHxdTBkEWxjGT0nspqtX2yzUQ'
+let apiOrganization = axios.create({
+  baseURL: config.api.organization.url,
+  timeout: 10000,
+  headers: {'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImNvbnRhY3RzIjpbXSwicm9sZXMiOlsicGFyZW50Il0sImNyZWF0ZU9uIjoiMjAxOC0wMi0xNVQxODoxNjoyNS43NTBaIiwidXBkYXRlT24iOiIyMDE4LTAyLTE1VDE4OjE2OjI1Ljc1MFoiLCJfaWQiOiI1YTg1Y2U3OTU5MWU4NzIxMThiOTkzOGMiLCJmaXJzdE5hbWUiOiJ0ZXN0IiwibGFzdE5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QGdldHBhaWR1cC5jb20iLCJ0eXBlIjoiY3VzdG9tZXIiLCJzYWx0IjoiZDhoVmh1UzZMSmgrV2gvMWpqMWYvQT09IiwiaGFzaGVkUGFzc3dvcmQiOiJTVkN5b0RRcVVmWS9McWdIUmFqanU1RGhDTVd3UU9oTlJzSDRNTzhoZjExZ2g3K1QwbmRIbmRnbjV4UDYvOHlKMTVYRmZBanFhKzliTGNWRmRMcDdqdz09IiwiX192IjowfSwiaWF0IjoxNTE4NzE4NjIzLCJleHAiOjM0MTA4Nzg2MjN9.tLvpo_aejNOB4fuIHvYHxdTBkEWxjGT0nspqtX2yzUQ'}
+})
 
 let orderService
-const invoiceService = InvoiceService.getInstance()
 
-// https://devapi.getpaidup.com/api/v1/organization/plan/5a859d2103db500098c46dda/join
 function getPlanData (planId) {
   return new Promise((resolve, reject) => {
-    axios.get('https://devapi.getpaidup.com/api/v1/organization/plan/5a859d2103db500098c46dda/join')
+    apiOrganization.get(`/plan/${planId}/join`)
       .then(response => {
         resolve(response.data)
       })
@@ -25,7 +28,7 @@ function getPlanData (planId) {
 
 function getBeneficiary (beneficiaryId) {
   return new Promise((resolve, reject) => {
-    axios.get('https://devapi.getpaidup.com/api/v1/organization/beneficiary/5a871f393ae525274595abab')
+    apiOrganization.get(`/beneficiary/${beneficiaryId}`)
       .then(response => {
         resolve(response.data)
       })
@@ -36,18 +39,17 @@ function getBeneficiary (beneficiaryId) {
   })
 }
 
-function prepareOrder (params) {
-  let { planId, bebeficiaryId } = params
+function prepareOrder ({ planId, beneficiaryId, customInfo } = {}) {
   return new Promise((resolve, reject) => {
     Promise.all([
       getPlanData(planId),
-      getBeneficiary(bebeficiaryId),
+      getBeneficiary(beneficiaryId),
       Sequence.next('order')
     ]).then(values => {
       let { organization, product, plan } = values[0]
       let beneficiary = values[1]
       let orderId = values[2].ids[0]
-      let payload = buildOrder(orderId, organization, product, plan, beneficiary, params.customInfo)
+      let payload = buildOrder(orderId, organization, product, plan, beneficiary, customInfo)
       resolve({
         payload,
         organization,
@@ -127,12 +129,12 @@ function calc (type, product, due) {
   return res
 }
 
-export default class OrderService extends CommonService {
+class OrderService extends CommonService {
   constructor () {
     super(new OrderModel())
   }
 
-  static getInstance () {
+  static get instance () {
     if (!orderService) {
       orderService = new OrderService()
     }
@@ -160,3 +162,5 @@ export default class OrderService extends CommonService {
     })
   }
 }
+
+export default OrderService.instance
