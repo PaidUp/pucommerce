@@ -26,7 +26,7 @@
   "author": "@paidUp",
   "license": "private",
   "dependencies": {
-    "pu-common": "git+ssh://git@github.com:PaidUp/PUCommon.git#0.15.2",
+    "pu-common": "git+ssh://git@github.com:PaidUp/PUCommon.git#0.15.3",
     "axios": "^0.17.1",
     "body-parser": "^1.14.1",
     "camelize": "^1.0.0",

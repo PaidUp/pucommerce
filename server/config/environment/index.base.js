@@ -39,7 +39,7 @@ let all = {
     key: 'JF06f7FJjTDkNOcM1sdywWw5CZBHW4Jy'
   },
   sequence: {
-    functionName: 'sequence-dev:3',
+    functionName: 'sequence-dev:5',
     db: '1',
     host: 'develop.rd7ge9.ng.0001.use1.cache.amazonaws.com',
     port: '6379'
