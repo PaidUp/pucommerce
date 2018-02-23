@@ -8,7 +8,7 @@ import config from '@/config/environment'
 let apiOrganization = axios.create({
   baseURL: config.api.organization.url,
   timeout: 10000,
-  headers: {'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImNvbnRhY3RzIjpbXSwicm9sZXMiOlsicGFyZW50Il0sImNyZWF0ZU9uIjoiMjAxOC0wMi0xNVQxODoxNjoyNS43NTBaIiwidXBkYXRlT24iOiIyMDE4LTAyLTE1VDE4OjE2OjI1Ljc1MFoiLCJfaWQiOiI1YTg1Y2U3OTU5MWU4NzIxMThiOTkzOGMiLCJmaXJzdE5hbWUiOiJ0ZXN0IiwibGFzdE5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QGdldHBhaWR1cC5jb20iLCJ0eXBlIjoiY3VzdG9tZXIiLCJzYWx0IjoiZDhoVmh1UzZMSmgrV2gvMWpqMWYvQT09IiwiaGFzaGVkUGFzc3dvcmQiOiJTVkN5b0RRcVVmWS9McWdIUmFqanU1RGhDTVd3UU9oTlJzSDRNTzhoZjExZ2g3K1QwbmRIbmRnbjV4UDYvOHlKMTVYRmZBanFhKzliTGNWRmRMcDdqdz09IiwiX192IjowfSwiaWF0IjoxNTE4NzE4NjIzLCJleHAiOjM0MTA4Nzg2MjN9.tLvpo_aejNOB4fuIHvYHxdTBkEWxjGT0nspqtX2yzUQ'}
+  headers: {'x-api-key': config.auth.key}
 })
 
 let orderService
@@ -26,9 +26,9 @@ function getPlanData (planId) {
   })
 }
 
-function getBeneficiary (beneficiaryId) {
+function bulkBeneficiary (beneficiaries) {
   return new Promise((resolve, reject) => {
-    apiOrganization.get(`/beneficiary/${beneficiaryId}`)
+    apiOrganization.post(`/beneficiary/import`, beneficiaries)
       .then(response => {
         resolve(response.data)
       })
@@ -39,24 +39,30 @@ function getBeneficiary (beneficiaryId) {
   })
 }
 
-function prepareOrder ({ planId, beneficiaryId, customInfo } = {}) {
+function prepareOrder ({ planId, beneficiaryFirstName, beneficiaryLastName, customInfo } = {}) {
   return new Promise((resolve, reject) => {
     Promise.all([
       getPlanData(planId),
-      getBeneficiary(beneficiaryId),
       Sequence.next('order')
     ]).then(values => {
       let { organization, product, plan } = values[0]
-      let beneficiary = values[1]
-      let orderId = values[2].ids[0]
-      let payload = buildOrder(orderId, organization, product, plan, beneficiary, customInfo)
-      resolve({
-        payload,
-        organization,
-        product,
-        plan,
-        beneficiary
-      })
+      let orderId = values[1].ids[0]
+      let beneficiary = {
+        organizationId: organization._id,
+        firstName: beneficiaryFirstName,
+        lastName: beneficiaryLastName,
+        key: `${organization._id.toLowerCase().trim()}_${beneficiaryFirstName.toLowerCase().trim()}_${beneficiaryLastName.toLowerCase().trim()}`
+      }
+      bulkBeneficiary([beneficiary]).then(res => {
+        let payload = buildOrder(orderId, organization, product, plan, beneficiary, customInfo)
+        resolve({
+          payload,
+          organization,
+          product,
+          plan,
+          beneficiary
+        })
+      }).catch(reason => reject(reason))
     }).catch(reason => reject(reason))
   })
 }
@@ -70,8 +76,9 @@ function buildOrder (orderId, organization, product, plan, beneficiary, customIn
     productName: product.name,
     productImage: product.image,
     season: product.season,
-    beneficiaryId: beneficiary._id,
-    beneficiaryName: beneficiary.name,
+    beneficiaryKey: beneficiary.key,
+    beneficiaryFirstName: beneficiary.firstName,
+    beneficiaryLastName: beneficiary.lastName,
     customInfo: customInfo,
     status: 'active'
   }

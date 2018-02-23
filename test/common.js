@@ -10,7 +10,8 @@ let request = {
   order: {
     orderForm: {
       planId: '5a859d2103db500098c46dda',
-      beneficiaryId: '5a871f393ae525274595abab',
+      beneficiaryFirstName: 'John',
+      beneficiaryLastName: 'Doe',
       paymentMethodtype: 'card',
       externalPaymentMethodId: 'zzzzz',
       brand: 'visa',

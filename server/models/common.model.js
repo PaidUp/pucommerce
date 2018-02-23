@@ -16,6 +16,7 @@ export default class CommonModel {
   save (pp) {
     return new Promise((resolve, reject) => {
       try {
+        pp.updateOn(Date.now())
         let model = new this.Model(pp)
         model.save((err, data) => {
           if (err) {

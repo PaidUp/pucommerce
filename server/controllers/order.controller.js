@@ -15,8 +15,11 @@ export default class OrganizationCotroller {
     if (!req.body.planId) {
       HandlerResponse.error(res, 'planId is required', 422)
     }
-    if (!req.body.beneficiaryId) {
-      HandlerResponse.error(res, 'beneficiaryId is required', 422)
+    if (!req.body.beneficiaryFirstName) {
+      HandlerResponse.error(res, 'beneficiaryFirstName is required', 422)
+    }
+    if (!req.body.beneficiaryLastName) {
+      HandlerResponse.error(res, 'beneficiaryLastName is required', 422)
     }
     if (!req.body.paymentMethodtype) {
       HandlerResponse.error(res, 'type is required', 422)
