@@ -1,6 +1,6 @@
 # PaidUp User API
 
->  A ES6 project for management to users
+>  A ES6 project for commerce service
 ## Build Setup
 
 ``` bash
