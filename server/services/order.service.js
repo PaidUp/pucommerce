@@ -18,8 +18,7 @@ function getPlanData (planId) {
     apiOrganization.get(`/plan/${planId}/join`)
       .then(response => {
         resolve(response.data)
-      })
-      .catch(error => {
+      }).catch(error => {
         console.log(error)
         reject(error)
       })
