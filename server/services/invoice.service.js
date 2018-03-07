@@ -11,6 +11,10 @@ class InvoiceService extends CommonService {
   insertMany (arr) {
     return this.model.insertMany(arr).then(docs => docs)
   }
+
+  addNote ({ id, note }) {
+    return this.model.updateById(id, { $push: { notes: note } })
+  }
 }
 
 invoiceService = new InvoiceService()

@@ -1,8 +1,8 @@
 import express from 'express'
-import { OrderController } from '@/controllers'
+import { InvoiceController } from '@/controllers'
 import { auth } from 'pu-common'
 
 const router = express.Router()
-router.post('/', auth.validate, OrderController.generate)
+router.post('/note', auth.validate, InvoiceController.addNote)
 
 export default router

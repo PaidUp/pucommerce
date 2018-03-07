@@ -35,4 +35,5 @@ describe('loading express', function () {
   })
 
   importTest('order: /api/v1/commerce/order ', './order');
+  importTest('invoice: /api/v1/commerce/invoice ', './invoice');
 })

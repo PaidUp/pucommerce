@@ -39,6 +39,7 @@ const schema = {
   price: { type: Number, required: true },
   priceBase: { type: Number, required: true },
   paidupFee: { type: Number, required: true },
+  notes: { type: [String], default: [] },
   user: { type: user, required: true },
   processingFees: { type: processingFees, required: true },
   paymentDetails: { type: paymentDetails, required: true },
