@@ -25,4 +25,8 @@ export default class CommonService {
     values._id = new ObjectId(id)
     return this.model.findOne(values).then(entity => entity)
   }
+
+  insertMany (arr) {
+    return this.model.insertMany(arr).then(docs => docs)
+  }
 }

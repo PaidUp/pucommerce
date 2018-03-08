@@ -18,7 +18,7 @@ const schema = {
   planDescription: { type: String },
   assigneeEmail: { type: String, required: true },
   customInfo: { type: [ customInfo ] },
-  status: { type: String, required: true, enum: ['active', 'inactive'] }
+  status: { type: String, enum: ['active', 'inactive'], default: 'active' }
 }
 
 export default class PreorderModel extends CommonModel {

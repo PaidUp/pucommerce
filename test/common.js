@@ -24,6 +24,25 @@ let request = {
         }
       ]
     }
+  },
+  preorder: {
+    preorderForm: {
+      organizationId: 'org_zzzzzzzz',
+      organizationName: 'Org Test',
+      productId: 'pro_zzzzzzzzzz',
+      productName: 'Prod Test',
+      productImage: 'http://.....',
+      beneficiaryKey: 'org_zzzzzzzz_jhon_doe',
+      beneficiaryFirstName: 'Jhon',
+      beneficiaryLastName: 'Doe',
+      planId: 'plan_zzzzzzzz',
+      planDescription: 'Monthly',
+      assigneeEmail: 'test@test.com',
+      customInfo: [{
+        model: 'mod',
+        value: 'val'
+      }]
+    }
   }
 }
 

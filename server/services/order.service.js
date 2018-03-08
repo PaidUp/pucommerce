@@ -142,11 +142,7 @@ class OrderService extends CommonService {
   }
 
   save (entity) {
-    return new Promise((resolve, reject) => {
-      this.model.save(entity).then(entity => {
-        resolve(entity)
-      })
-    })
+    this.model.save(entity)
   }
 
   generate (params) {

@@ -71,4 +71,13 @@ export default class CommonModel {
   findById (_id) {
     return this.Model.findById(_id).exec()
   }
+
+  insertMany (arr) {
+    return new Promise((resolve, reject) => {
+      this.Model.insertMany(arr, (error, docs) => {
+        if (error) return reject(error)
+        resolve(docs)
+      })
+    })
+  }
 }
