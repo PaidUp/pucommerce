@@ -25,7 +25,7 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: yarn install
+      - run: npm install
       - run:
           name: copy config file
           command: cp server/config/environment/index.base.js server/config/environment/index.js
@@ -36,7 +36,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
         
       # run tests!
-      - run: yarn test
+      - run: npm test
 
 
   deploy-develop:
