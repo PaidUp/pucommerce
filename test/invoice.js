@@ -10,7 +10,7 @@ it('POST# /note add a note to invoice', done => {
   chai
     .request(server)
     .post('/api/v1/commerce/invoice/note')
-    .set('authorization', token)
+    .set('authorization', token())
     .send({
       id: invoice._id,
       note: 'this is a note test'

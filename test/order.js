@@ -9,7 +9,7 @@ it('POST# / create an order', done => {
   chai
     .request(server)
     .post('/api/v1/commerce/order')
-    .set('authorization', token)
+    .set('authorization', token())
     .send(common.request.order.orderForm)
     .end((err, res) => {
       res.should.have.status(200)
