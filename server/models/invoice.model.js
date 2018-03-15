@@ -22,6 +22,7 @@ const processingFees = {
 
 const paymentDetails = {
   externalCustommerId: { type: String, required: true },
+  statementDescriptor: { type: String, required: true },
   paymentMethodtype: { type: String, required: true, enum: ['card', 'bank'] },
   externalPaymentMethodId: { type: String, required: true },
   brand: { type: String, required: true },
@@ -44,6 +45,7 @@ const schema = {
   processingFees: { type: processingFees, required: true },
   paymentDetails: { type: paymentDetails, required: true },
   payFees: { type: payFees, required: true },
+  attempts: { type: Array, default: [] },
   status: { type: String, required: true, enum: ['pending', 'charged'] }
 }
 

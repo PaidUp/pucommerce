@@ -22,10 +22,10 @@ export default class OrganizationCotroller {
       HandlerResponse.error(res, 'beneficiaryLastName is required', 422)
     }
     if (!req.body.paymentMethodtype) {
-      HandlerResponse.error(res, 'type is required', 422)
+      HandlerResponse.error(res, 'paymentMethodtype is required', 422)
     }
     if (req.body.paymentMethodtype !== 'bank' && req.body.paymentMethodtype !== 'card') {
-      HandlerResponse.error(res, 'type must be card or bank', 422)
+      HandlerResponse.error(res, 'paymentMethodtype must be card or bank', 422)
     }
     if (!req.body.externalPaymentMethodId) {
       HandlerResponse.error(res, 'externalPaymentMethodId is required', 422)

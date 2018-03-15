@@ -14,7 +14,7 @@ let request = {
       beneficiaryFirstName: 'John',
       beneficiaryLastName: 'Doe',
       paymentMethodtype: 'card',
-      externalPaymentMethodId: 'zzzzz',
+      externalPaymentMethodId: 'card_1C5gyzEq5JnVWNpRgXkv0r8I', // card fail card_1C5lGWEq5JnVWNpRCPxjOQ25
       brand: 'visa',
       last4: '1111',
       customInfo: [

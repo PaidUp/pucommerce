@@ -110,6 +110,7 @@ function buildInvoices (orderId, organization, product, plan, beneficiary, param
           processingFees: product.processingFees,
           paymentDetails: {
             externalCustomerId: user.externalCustomerId,
+            statementDescriptor: product.statementDescriptor,
             paymentMethodtype,
             externalPaymentMethodId,
             brand,
