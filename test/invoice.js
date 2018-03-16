@@ -22,3 +22,15 @@ it('POST# /note add a note to invoice', done => {
       done()
     })
 })
+
+it('GET# /source/:source get invoices by payent method', done => {
+  chai
+    .request(server)
+    .get('/api/v1/commerce/invoice/source/card_1C5lGWEq5JnVWNpRCPxjOQ21')
+    .set('authorization', token())
+    .end((err, res) => {
+      res.should.have.status(200)
+      res.body.should.be.a('array')
+      done()
+    })
+})
