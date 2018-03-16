@@ -23,10 +23,10 @@ it('POST# /note add a note to invoice', done => {
     })
 })
 
-it('GET# /source/:source get invoices by payent method', done => {
+it('GET# /method/:paymentMethodId get invoices by payent method', done => {
   chai
     .request(server)
-    .get('/api/v1/commerce/invoice/source/card_1C5lGWEq5JnVWNpRCPxjOQ21')
+    .get('/api/v1/commerce/invoice/method/card_1C5lGWEq5JnVWNpRCPxjOQ21')
     .set('authorization', token())
     .end((err, res) => {
       res.should.have.status(200)

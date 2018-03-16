@@ -13,9 +13,9 @@ export default class OrganizationCotroller {
   }
 
   static getByPaymentMethod (req, res) {
-    const source = req.params.source
-    if (!source) return HR.error(res, 'source is required', 422)
-    invoiceService.find({'paymentDetails.externalPaymentMethodId': source})
+    const paymentMethodId = req.params.paymentMethodId
+    if (!paymentMethodId) return HR.error(res, 'paymentMethodId is required', 422)
+    invoiceService.find({'paymentDetails.externalPaymentMethodId': paymentMethodId})
       .then(results => HR.send(res, results))
       .catch(reason => HR.error(res, reason))
   }

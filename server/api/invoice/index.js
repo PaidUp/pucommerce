@@ -4,6 +4,6 @@ import { auth } from 'pu-common'
 
 const router = express.Router()
 router.post('/note', auth.validate, InvoiceController.addNote)
-router.get('/source/:source', auth.validate, InvoiceController.getByPaymentMethod)
+router.get('/method/:paymentMethodId', auth.validate, InvoiceController.getByPaymentMethod)
 
 export default router
