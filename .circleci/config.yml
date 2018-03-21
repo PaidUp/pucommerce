@@ -10,8 +10,8 @@ jobs:
       - image: circleci/node:8.9.4 
     environment:
       - ANSIBLE_HOST_KEY_CHECKING: false
-      - AWS_ACCESS_KEY_ID: AKIAJ2BQ2ZDZE2RGTGDQ
-      - AWS_SECRET_ACCESS_KEY: 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
+      - AWS_ACCESS_KEY_ID: AKIAIQMH2OTQ22LUNQXQ
+      - AWS_SECRET_ACCESS_KEY: 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
 
     working_directory: ~/repo
 
