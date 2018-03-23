@@ -54,6 +54,10 @@ let all = {
     organization: {
       url: 'http://localhost:9002/api/v1/organization'
     }
+  },
+  contract: {
+    username: 'api_kHDbL5jE5Xrna4dK',
+    password: 'AZvX7-712ZbuuJGBLawPbGxCCE1mreKBtFswrwDHzeg'
   }
 }
 
