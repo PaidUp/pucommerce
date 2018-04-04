@@ -13,6 +13,10 @@ export default class CommonModel {
     )
   }
 
+  get collection () {
+    return this.Model
+  }
+
   save (pp) {
     return new Promise((resolve, reject) => {
       try {

@@ -22,3 +22,20 @@ it('POST# / create an order', done => {
     })
 })
 
+it('GET# /beneficiary/:beneficiaryKey retrieve orders', done => {
+  chai
+    .request(server)
+    .get('/api/v1/commerce/order/beneficiary/5a85cfd53ae52527453f9fa2_john_doe')
+    .set('authorization', token())
+    .end((err, res) => {
+      res.should.have.status(200)
+      res.body.should.to.be.an('array')
+      console.log(res.body)
+      // res.body[0].should.have.property('_id')
+      // res.body[0].should.have.property('invoiceId')
+      // res.body[0].should.have.property('orderId')
+      // common.results.invoices = res.body
+      done()
+    })
+})
+

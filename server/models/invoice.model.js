@@ -1,4 +1,6 @@
 import CommonModel from './common.model'
+import { Schema } from 'mongoose'
+const ObjectId = Schema.Types.ObjectId
 
 const user = {
   userId: { type: String, required: true },
@@ -31,7 +33,7 @@ const paymentDetails = {
 
 const schema = {
   invoiceId: { type: String, required: true },
-  orderId: { type: String, required: true },
+  orderId: { type: ObjectId, required: true, ref: 'pu_commerce_orders' },
   label: { type: String, required: true },
   connectAccount: { type: String, required: true },
   dataCharge: { type: Date, required: true },

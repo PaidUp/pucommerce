@@ -15,7 +15,7 @@ describe('loading express', function () {
   before(function (done) {
     setTimeout(() => {
       done()
-    }, 4000)
+    }, 10000)
   })
 
   after(function () {
