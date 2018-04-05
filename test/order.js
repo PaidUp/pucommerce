@@ -22,10 +22,10 @@ it('POST# / create an order', done => {
     })
 })
 
-it('GET# /beneficiary/:beneficiaryKey retrieve orders', done => {
+it('GET# /beneficiary retrieve orders', done => {
   chai
     .request(server)
-    .get('/api/v1/commerce/order/beneficiary/5a85cfd53ae52527453f9fa2_john_doe')
+    .get(`/api/v1/commerce/order/beneficiary?organizationId=5a85cfd53ae52527453f9fa2&beneficiaryFirstName=John&beneficiaryLastName=Doe&userEmail=test@getpaidup.com`)
     .set('authorization', token())
     .end((err, res) => {
       res.should.have.status(200)

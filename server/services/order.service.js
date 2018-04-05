@@ -75,7 +75,6 @@ function buildOrder (orderId, organization, product, plan, beneficiary, customIn
     productName: product.name,
     productImage: product.image,
     season: product.season,
-    beneficiaryKey: beneficiary.key,
     beneficiaryFirstName: beneficiary.firstName,
     beneficiaryLastName: beneficiary.lastName,
     customInfo: customInfo,
@@ -159,17 +158,18 @@ class OrderService extends CommonService {
     })
   }
 
-  aggregateByBeneficiary (beneficiaryKey) {
+  aggregateByBeneficiary ({ organizationId, beneficiaryFirstName, beneficiaryLastName, userEmail }) {
     return new Promise((resolve, reject) => {
       try {
         this.model.collection.aggregate([
-          { $match: { beneficiaryKey } },
+          { $match: { organizationId, beneficiaryFirstName, beneficiaryLastName } },
           { $lookup: {
             from: 'pu_commerce_invoices',
             localField: '_id',
             foreignField: 'orderId',
             as: 'invoices'}
-          }
+          },
+          { $match: { 'invoices.user.userEmail': userEmail } }
         ]).exec((err, result) => {
           if (err) return reject(err)
           resolve(result)

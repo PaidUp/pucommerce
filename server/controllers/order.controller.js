@@ -32,9 +32,12 @@ export default class OrganizationCotroller {
   }
 
   static getOrdersByBeneficiary (req, res) {
-    const beneficiaryKey = req.params.beneficiaryKey
-    if (!beneficiaryKey) return HR.error(res, 'beneficiaryKey is required', 422)
-    orderService.aggregateByBeneficiary(beneficiaryKey)
+    let { organizationId, beneficiaryFirstName, beneficiaryLastName, userEmail } = req.query
+    if (!organizationId) return HR.error(res, 'organizationId is required', 422)
+    if (!beneficiaryFirstName) return HR.error(res, 'beneficiaryFirstName is required', 422)
+    if (!beneficiaryLastName) return HR.error(res, 'beneficiaryLastName is required', 422)
+    if (!userEmail) return HR.error(res, 'userEmail is required', 422)
+    orderService.aggregateByBeneficiary({ organizationId, beneficiaryFirstName, beneficiaryLastName, userEmail })
       .then(orders => HR.send(res, orders))
       .catch(reason => HR.error(res, reason))
   }
