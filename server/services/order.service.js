@@ -48,9 +48,9 @@ function prepareOrder ({ planId, beneficiaryFirstName, beneficiaryLastName, cust
       let orderId = values[1].ids[0]
       let beneficiary = {
         organizationId: organization._id,
+        organizationName: organization.businessName,
         firstName: beneficiaryFirstName,
-        lastName: beneficiaryLastName,
-        key: `${organization._id.toLowerCase().trim()}_${beneficiaryFirstName.toLowerCase().trim()}_${beneficiaryLastName.toLowerCase().trim()}`
+        lastName: beneficiaryLastName
       }
       bulkBeneficiary([beneficiary]).then(res => {
         let payload = buildOrder(orderId, organization, product, plan, beneficiary, customInfo)
