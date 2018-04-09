@@ -30,11 +30,10 @@ it('GET# /beneficiary retrieve orders', done => {
     .end((err, res) => {
       res.should.have.status(200)
       res.body.should.to.be.an('array')
-      console.log(res.body)
       // res.body[0].should.have.property('_id')
       // res.body[0].should.have.property('invoiceId')
       // res.body[0].should.have.property('orderId')
-      // common.results.invoices = res.body
+      common.results.orders = res.body
       done()
     })
 })

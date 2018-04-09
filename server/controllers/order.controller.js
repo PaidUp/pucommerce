@@ -37,8 +37,19 @@ export default class OrganizationCotroller {
     if (!beneficiaryFirstName) return HR.error(res, 'beneficiaryFirstName is required', 422)
     if (!beneficiaryLastName) return HR.error(res, 'beneficiaryLastName is required', 422)
     if (!userEmail) return HR.error(res, 'userEmail is required', 422)
-    orderService.aggregateByBeneficiary({ organizationId, beneficiaryFirstName, beneficiaryLastName, userEmail })
-      .then(orders => HR.send(res, orders))
-      .catch(reason => HR.error(res, reason))
+    Promise.all([
+      orderService.aggregateByBeneficiary({ organizationId, beneficiaryFirstName, beneficiaryLastName, userEmail }),
+      orderService.aggregateCreditByBeneficiary({ organizationId, beneficiaryFirstName, beneficiaryLastName })
+    ]).then(values => {
+      let orders = values[0].map(order => {
+        values[1].forEach(element => {
+          if (element._id.toString() === order._id.toString()) {
+            order.credits = element.credits
+          }
+        })
+        return order
+      })
+      HR.send(res, orders)
+    }).catch(reason => HR.error(res, reason))
   }
 }

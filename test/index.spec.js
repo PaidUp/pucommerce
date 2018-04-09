@@ -27,7 +27,7 @@ describe('loading express', function () {
       chai
         .request(server)
         .get('/')
-        .end((err, res) => {
+        .end((err, res) => {  
           res.should.have.status(200)
           done()
         })
@@ -38,4 +38,5 @@ describe('loading express', function () {
   importTest('invoice: /api/v1/commerce/invoice ', './invoice');
   importTest('preorder: /api/v1/commerce/preorder ', './preorder');
   importTest('contract: ', './contract');
+  importTest('credit: ', './credit');
 })

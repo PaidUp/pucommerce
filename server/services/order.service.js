@@ -179,6 +179,27 @@ class OrderService extends CommonService {
       }
     })
   }
+
+  aggregateCreditByBeneficiary ({ organizationId, beneficiaryFirstName, beneficiaryLastName }) {
+    return new Promise((resolve, reject) => {
+      try {
+        this.model.collection.aggregate([
+          { $match: { organizationId, beneficiaryFirstName, beneficiaryLastName } },
+          { $lookup: {
+            from: 'pu_commerce_credits',
+            localField: '_id',
+            foreignField: 'orderId',
+            as: 'credits'}
+          }
+        ]).exec((err, result) => {
+          if (err) return reject(err)
+          resolve(result)
+        })
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }
 }
 
 orderService = new OrderService()
