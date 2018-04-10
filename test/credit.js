@@ -15,7 +15,7 @@ it('POST# / add a credit memo', done => {
     .end((err, res) => {
       res.should.have.status(200)
       res.body._id.should.be.a('string')
-      res.body.amount.should.equal(200)
+      res.body.price.should.equal(200)
       done()
     })
 })

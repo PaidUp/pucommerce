@@ -44,7 +44,7 @@ export default class OrganizationCotroller {
       let orders = values[0].map(order => {
         values[1].forEach(element => {
           if (element._id.toString() === order._id.toString()) {
-            order.credits = element.credits
+            order.invoices = order.invoices.concat(element.credits)
           }
         })
         return order

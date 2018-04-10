@@ -9,10 +9,10 @@ class CreditService extends CommonService {
     super(new CreditModel())
   }
 
-  add ({label, description, amount, orderId, status}) {
+  add ({label, description, price, orderId, status}) {
     return Sequence.next('cmemo').then(values => {
       let memoId = 'CMEMO' + values.ids[0]
-      return this.save({ memoId, label, description, amount, orderId, status })
+      return this.save({ memoId, label, description, price, orderId, status })
     })
   }
 }

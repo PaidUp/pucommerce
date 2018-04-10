@@ -53,7 +53,7 @@ let request = {
     form: {
       label: 'Dues Commintment Due Fee',
       description: 'test credit memo',
-      amount: 200,
+      price: 200,
       status: 'partially_refunded'
     }
   }
