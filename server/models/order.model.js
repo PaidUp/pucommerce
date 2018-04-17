@@ -12,7 +12,7 @@ const schema = {
   organizationName: { type: String, required: true },
   productId: { type: String, required: true },
   productName: { type: String, required: true },
-  productImage: { type: String, required: true },
+  productImage: { type: String },
   beneficiaryFirstName: { type: String, required: true },
   beneficiaryLastName: { type: String, required: true },
   season: { type: String, required: true },

@@ -2,7 +2,7 @@
 // ==================================
 const mongoHost = 'pu-dev-shard-00-00-4nodg.mongodb.net:27017,pu-dev-shard-00-01-4nodg.mongodb.net:27017,pu-dev-shard-00-02-4nodg.mongodb.net:27017'
 module.exports = {
-  port: process.env.PORT || 9003,
+  port: process.env.PORT || 9013,
   mongo: {
     uri: 'mongodb://' + mongoHost + '/testing',
     prefix: 'pu_commerce_',
