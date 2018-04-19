@@ -17,7 +17,7 @@ const schema = {
   beneficiaryLastName: { type: String, required: true },
   season: { type: String, required: true },
   customInfo: { type: [customInfo], default: [] },
-  status: { type: String, required: true, enum: ['active', 'inactive'] }
+  status: { type: String, required: true, default: 'active', enum: ['active', 'inactive'] }
 }
 
 export default class OrderModel extends CommonModel {

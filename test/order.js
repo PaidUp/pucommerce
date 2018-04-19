@@ -12,7 +12,6 @@ it('POST# / create an order', done => {
     .set('authorization', token())
     .send(common.request.order.orderForm)
     .end((err, res) => {
-      console.log('error: ', err)
       res.should.have.status(200)
       res.body.should.to.be.an('array')
       res.body[0].should.have.property('_id')

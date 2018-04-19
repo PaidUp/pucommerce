@@ -8,6 +8,16 @@ export default class OrganizationCotroller {
       .catch(reason => HR.error(res, reason))
   }
 
+  static checkout (req, res) {
+    let { order, dues, product, user = req.user } = req.body
+    if (!order) return HR.error(res, 'order is required', 422)
+    if (!dues) return HR.error(res, 'dues is required', 422)
+    if (!product) return HR.error(res, 'product is required', 422)
+    orderService.checkout({order, dues, product, user})
+      .then(order => HR.send(res, order))
+      .catch(reason => HR.error(res, reason))
+  }
+
   static generate (req, res) {
     if (!req.body.planId) return HR.error(res, 'planId is required', 422)
     if (!req.body.beneficiaryFirstName) return HR.error(res, 'beneficiaryFirstName is required', 422)

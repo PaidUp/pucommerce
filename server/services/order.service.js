@@ -25,6 +25,18 @@ function getPlanData (planId) {
   })
 }
 
+function getOrganization (organizationId) {
+  return new Promise((resolve, reject) => {
+    apiOrganization.get(`/${organizationId}`)
+      .then(response => {
+        resolve(response.data)
+      }).catch(error => {
+        console.log(error)
+        reject(error)
+      })
+  })
+}
+
 function bulkBeneficiary (beneficiaries) {
   return new Promise((resolve, reject) => {
     apiOrganization.post(`/beneficiary/import`, beneficiaries)
@@ -114,8 +126,7 @@ function buildInvoices (orderId, organization, product, plan, beneficiary, param
             externalPaymentMethodId,
             brand,
             last4
-          },
-          status: 'pending'
+          }
         })
       }
       resolve(res)
@@ -130,10 +141,53 @@ function calc (type, product, due) {
   }
   if (type === 'card') {
     res = Calculations.card(product, due)
-  } else if (type === 'bank') {
+  } else if (type === 'bank_account') {
     res = Calculations.bank(product, due)
   }
   return res
+}
+
+function generateInvoices (order, dues, product, user) {
+  let invoices = []
+  let organization
+  return getOrganization(order.organizationId).then(org => {
+    organization = org
+    return Sequence.next('invoice', dues.length)
+  }).then(seqs => {
+    for (let idx = 0; idx < dues.length; idx++) {
+      let calculation = calc(dues[idx].account.object, product, dues[idx])
+      let invoice = {
+        invoiceId: seqs.ids[idx],
+        orderId: order._id,
+        label: dues[idx].description,
+        connectAccount: organization.connectAccount,
+        dataCharge: dues[idx].dateCharge,
+        price: dues[idx].amount,
+        priceBase: calculation.priceBase,
+        paidupFee: calculation.paidupFee,
+        user: {
+          userId: user._id,
+          userFirstName: user.firstName,
+          userLastName: user.lastName,
+          userEmail: user.email
+        },
+        payFees: product.payFees,
+        processingFees: product.processingFees,
+        paymentDetails: {
+          externalCustomerId: user.externalCustomerId,
+          statementDescriptor: product.statementDescriptor,
+          paymentMethodtype: dues[idx].account.object,
+          externalPaymentMethodId: dues[idx].account.id,
+          brand: dues[idx].account.brand || dues[idx].account.bank_name,
+          last4: dues[idx].account.last4
+        },
+        status: 'autopay'
+      }
+      invoices.push(invoice)
+    }
+    console.log('invoices: ', invoices)
+    return invoices
+  })
 }
 
 class OrderService extends CommonService {
@@ -143,6 +197,22 @@ class OrderService extends CommonService {
 
   save (entity) {
     this.model.save(entity)
+  }
+
+  checkout ({order, dues, product, user}) {
+    return new Promise((resolve, reject) => {
+      Sequence.next('order').then(seq => {
+        order.orderId = seq.ids[0]
+        this.model.save(order).then(ord => {
+          generateInvoices(ord, dues, product, user).then(invoices => {
+            invoiceService.insertMany(invoices).then(result => {
+              ord.invoices = result
+              resolve(ord)
+            })
+          })
+        })
+      })
+    })
   }
 
   generate (params) {

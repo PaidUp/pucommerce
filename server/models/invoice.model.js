@@ -25,7 +25,7 @@ const processingFees = {
 const paymentDetails = {
   externalCustommerId: { type: String, required: true },
   statementDescriptor: { type: String, required: true },
-  paymentMethodtype: { type: String, required: true, enum: ['card', 'bank'] },
+  paymentMethodtype: { type: String, required: true, enum: ['card', 'bank_account'] },
   externalPaymentMethodId: { type: String, required: true },
   brand: { type: String, required: true },
   last4: { type: String, required: true }
@@ -48,7 +48,7 @@ const schema = {
   paymentDetails: { type: paymentDetails, required: true },
   payFees: { type: payFees, required: true },
   attempts: { type: Array, default: [] },
-  status: { type: String, required: true, enum: ['pending', 'charged'] }
+  status: { type: String, required: true, default: 'autopay', enum: ['autopay', 'charged', 'failed', 'refunded'] }
 }
 
 export default class InvoiceModel extends CommonModel {
