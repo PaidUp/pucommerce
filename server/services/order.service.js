@@ -1,7 +1,8 @@
 import { OrderModel } from '@/models'
 import CommonService from './common.service'
 import axios from 'axios'
-import { Calculations, Sequence } from 'pu-common'
+import { Sequence } from 'pu-common'
+import Calculations from './calculations'
 import invoiceService from './invoice.service'
 import config from '@/config/environment'
 
@@ -185,7 +186,6 @@ function generateInvoices (order, dues, product, user) {
       }
       invoices.push(invoice)
     }
-    console.log('invoices: ', invoices)
     return invoices
   })
 }
@@ -209,6 +209,9 @@ class OrderService extends CommonService {
               ord.invoices = result
               resolve(ord)
             })
+          }).catch(reason => {
+            console.log(reason)
+            reject(reason)
           })
         })
       })
