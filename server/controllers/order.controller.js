@@ -16,7 +16,6 @@ export default class OrganizationCotroller {
     orderService.checkout({order, dues, product, user})
       .then(order => HR.send(res, order))
       .catch(reason => {
-        console.log('reason: ', reason)
         HR.error(res, reason)
       })
   }

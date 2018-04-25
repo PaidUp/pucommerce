@@ -6,7 +6,6 @@ import Calculations from './calculations'
 import invoiceService from './invoice.service'
 import config from '@/config/environment'
 
-console.log('config.api.organization.url: ', config.api.organization.url)
 let apiOrganization = axios.create({
   baseURL: config.api.organization.url,
   timeout: 10000,
@@ -152,9 +151,7 @@ function calc (type, product, due) {
 function generateInvoices (order, dues, product, user) {
   let invoices = []
   let organization
-  console.log('start get organizations')
   return getOrganization(order.organizationId).then(org => {
-    console.log('org', org)
     organization = org
     return Sequence.next('invoice', dues.length)
   }).then(seqs => {
