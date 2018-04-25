@@ -15,7 +15,10 @@ export default class OrganizationCotroller {
     if (!product) return HR.error(res, 'product is required', 422)
     orderService.checkout({order, dues, product, user})
       .then(order => HR.send(res, order))
-      .catch(reason => HR.error(res, reason))
+      .catch(reason => {
+        console.log('reason: ', reason)
+        HR.error(res, reason)
+      })
   }
 
   static generate (req, res) {
