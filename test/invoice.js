@@ -5,6 +5,20 @@ let server = common.server
 let token = common.token
 let chai = common.chai
 
+it('POST# /checkout create invoices', done => {
+  let params = common.request.checkout
+  chai
+    .request(server)
+    .post('/api/v1/commerce/invoice/checkout')
+    .set('authorization', token())
+    .send(params)
+    .end((err, res) => {
+      res.should.have.status(200)
+      common.results.invoices = res.body
+      done()
+    })
+})
+
 it('POST# /note add a note to invoice', done => {
   let invoice = common.results.invoices[0]
   chai

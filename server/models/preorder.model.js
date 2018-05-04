@@ -11,7 +11,7 @@ const schema = {
   productId: { type: String },
   productName: { type: String },
   productImage: { type: String },
-  beneficiaryKey: { type: String, required: true },
+  beneficiaryId: { type: String, required: true },
   beneficiaryFirstName: { type: String, required: true },
   beneficiaryLastName: { type: String, required: true },
   planId: { type: String },

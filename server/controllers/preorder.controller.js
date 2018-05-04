@@ -3,8 +3,8 @@ import { HandlerResponse as HR } from 'pu-common'
 
 function validateRequired (params) {
   let requireds = params.map(param => {
-    let { organizationId, organizationName, beneficiaryKey, beneficiaryFirstName, beneficiaryLastName, assigneeEmail } = param
-    return { organizationId, organizationName, beneficiaryKey, beneficiaryFirstName, beneficiaryLastName, assigneeEmail }
+    let { organizationId, organizationName, beneficiaryId, beneficiaryFirstName, beneficiaryLastName, assigneeEmail } = param
+    return { organizationId, organizationName, beneficiaryId, beneficiaryFirstName, beneficiaryLastName, assigneeEmail }
   })
   let messages = []
   requireds.forEach((row, idx) => {

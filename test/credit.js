@@ -4,7 +4,7 @@ let server = common.server
 let chai = common.chai
 let token = common.token
 
-it('POST# / add a credit memo', done => {
+it.skip('POST# / add a credit memo', done => {
   let form = common.request.credit.form
   form.orderId = common.results.orders[0]._id
   chai

@@ -13,4 +13,10 @@ export default class OrganizationCotroller {
       .then(cMemo => HR.send(res, cMemo))
       .catch(reason => HR.error(res, reason))
   }
+
+  static getByBeneficiary (req, res) {
+    creditService.find({ beneficiaryId: req.params.beneficiaryId })
+      .then(cMemo => HR.send(res, cMemo))
+      .catch(reason => HR.error(res, reason))
+  }
 }

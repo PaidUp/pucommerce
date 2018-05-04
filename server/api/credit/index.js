@@ -4,5 +4,6 @@ import { auth } from 'pu-common'
 
 const router = express.Router()
 router.post('/', auth.validate, CreditController.addCreditMeno)
+router.get('/beneficiary/:beneficiaryId', auth.validate, CreditController.getByBeneficiary)
 
 export default router
