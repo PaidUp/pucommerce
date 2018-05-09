@@ -45,4 +45,17 @@ export default class PreorderCotroller {
         return HR.error(res, reason)
       })
   }
+
+  static getByBeneficiary (req, res) {
+    let beneficiaryId = req.params.beneficiaryId
+
+    if (!beneficiaryId) return HR.error(res, 'beneficiaryId is required', 422)
+
+    preorderService.find({beneficiaryId, status: 'active'})
+      .then(preorders => {
+        return HR.send(res, preorders)
+      }).catch(reason => {
+        return HR.error(res, reason)
+      })
+  }
 }
