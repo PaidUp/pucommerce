@@ -32,6 +32,20 @@ export default class PreorderCotroller {
       })
   }
 
+  static update (req, res) {
+    let { id, values } = req.body
+
+    if (!id) return HR.error(res, 'id is required', 422)
+    if (!values) return HR.error(res, 'values is required', 422)
+
+    preorderService.updateById(id, values)
+      .then(preorder => {
+        return HR.send(res, preorder)
+      }).catch(reason => {
+        return HR.error(res, reason)
+      })
+  }
+
   static import (req, res) {
     let message = validateRequired(req.body)
 
