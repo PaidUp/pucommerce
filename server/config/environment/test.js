@@ -26,6 +26,9 @@ module.exports = {
   api: {
     organization: {
       url: 'https://devapi.getpaidup.com/api/v1/organization'
+    },
+    user: {
+      url: 'https://devapi.getpaidup.com/api/v1/user'
     }
   }
 }

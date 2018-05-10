@@ -53,6 +53,9 @@ let all = {
   api: {
     organization: {
       url: 'http://localhost:9002/api/v1/organization'
+    },
+    user: {
+      url: 'http://localhost:9001/api/v1/user'
     }
   },
   contract: {

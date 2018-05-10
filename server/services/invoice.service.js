@@ -12,6 +12,12 @@ let apiOrganization = axios.create({
   headers: {'x-api-key': config.auth.key}
 })
 
+let apiUser = axios.create({
+  baseURL: config.api.user.url,
+  timeout: 10000,
+  headers: {'x-api-key': config.auth.key}
+})
+
 function getOrganization (organizationId) {
   return new Promise((resolve, reject) => {
     apiOrganization.get(`/${organizationId}`)
@@ -95,9 +101,12 @@ class InvoiceService extends CommonService {
 
   checkout ({order, dues, product, user}) {
     return new Promise((resolve, reject) => {
-      generateInvoices(order, dues, product, user).then(invoices => {
-        this.insertMany(invoices).then(result => resolve(result))
-      }).catch(reason => reject(reason))
+      apiUser.get(`/id/${user._id}`)
+        .then(response => {
+          generateInvoices(order, dues, product, response.data).then(invoices => {
+            this.insertMany(invoices).then(result => resolve(result))
+          })
+        }).catch(reason => reject(reason))
     })
   }
 
