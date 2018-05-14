@@ -51,7 +51,8 @@ const schema = {
   customInfo: { type: [customInfo], default: [] },
 
   connectAccount: { type: String, required: true },
-  dataCharge: { type: Date, required: true },
+  dateCharge: { type: Date, required: true },
+  maxDateCharge: { type: Date },
   chargedOn: { type: Date },
   chargeId: { type: String },
   price: { type: Number, required: true },
