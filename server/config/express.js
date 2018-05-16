@@ -14,6 +14,7 @@ import errorhandler from 'errorhandler'
 import pmx from 'pmx'
 
 export default function (app) {
+  app.options('*', cors())
   app.use(cors())
   app.use(compression())
   app.use(bodyParser.urlencoded({ extended: false }))
