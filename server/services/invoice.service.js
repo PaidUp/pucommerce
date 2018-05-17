@@ -1,7 +1,7 @@
 import { InvoiceModel } from '@/models'
 import CommonService from './common.service'
 import axios from 'axios'
-import { Sequence } from 'pu-common'
+import { Sequence, Logger } from 'pu-common'
 import config from '@/config/environment'
 import Calculations from './calculations'
 
@@ -19,15 +19,7 @@ let apiUser = axios.create({
 })
 
 function getOrganization (organizationId) {
-  return new Promise((resolve, reject) => {
-    apiOrganization.get(`/${organizationId}`)
-      .then(response => {
-        resolve(response.data)
-      }).catch(error => {
-        console.log(error)
-        reject(error)
-      })
-  })
+  return apiOrganization.get(`/${organizationId}`)
 }
 
 function calc (type, product, due) {
@@ -46,8 +38,9 @@ function calc (type, product, due) {
 function generateInvoices (order, dues, product, user) {
   let invoices = []
   let organization
-  return getOrganization(order.organizationId).then(org => {
-    organization = org
+  return getOrganization(order.organizationId).then(response => {
+    organization = response.data
+    Logger.info('Organization: ', JSON.stringify(organization))
     return Sequence.next('invoice', dues.length)
   }).then(seqs => {
     for (let idx = 0; idx < dues.length; idx++) {

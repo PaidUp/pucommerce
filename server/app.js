@@ -46,6 +46,7 @@ process.on('unhandledRejection', (err) => {
   throw err
 })
 process.on('uncaughtException', (err) => {
+  console.log(err)
   Logger.critical(err)
   if (process.env.NODE_ENV === 'test') {
     process.exit(1)
