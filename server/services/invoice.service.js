@@ -3,7 +3,6 @@ import CommonService from './common.service'
 import axios from 'axios'
 import { Sequence } from 'pu-common'
 import config from '@/config/environment'
-// import Calculations from './calculations'
 import { productPriceV2 } from 'machinepack-calculations'
 
 let invoiceService
@@ -23,85 +22,85 @@ function getOrganization (organizationId) {
   return apiOrganization.get(`/${organizationId}`)
 }
 
-function calculations (product, due, cb) {
-  productPriceV2({
-    type: due.account.object,
-    capAmount: product.processingFees.achFeeCap,
-    originalPrice: due.amount,
-    stripePercent: product.processingFees.cardFee,
-    stripeFlat: product.processingFees.cardFeeFlat,
-    stripeAchPercent: product.processingFees.achFee,
-    stripeAchFlat: product.processingFees.achFeeFlat,
-    paidUpFee: product.collectionFees.fee,
-    paidUpFlat: product.collectionFees.feeFlat,
-    discount: 0,
-    payProcessing: product.payFees.processing,
-    payCollecting: product.payFees.collect
-  }).exec(
-    {
-      error: function (err) {
-        return cb(err)
-      },
-      success: function (result) {
-        return cb(null, {
-          priceBase: result.basePrice,
-          paidupFee: result.feePaidUp
-        })
+function calculations (product, due, order, organization, user, seq) {
+  return new Promise((resolve, reject) => {
+    productPriceV2({
+      type: due.account.object,
+      capAmount: product.processingFees.achFeeCap,
+      originalPrice: due.amount,
+      stripePercent: product.processingFees.cardFee,
+      stripeFlat: product.processingFees.cardFeeFlat,
+      stripeAchPercent: product.processingFees.achFee,
+      stripeAchFlat: product.processingFees.achFeeFlat,
+      paidUpFee: product.collectionFees.fee,
+      paidUpFlat: product.collectionFees.feeFlat,
+      discount: 0,
+      payProcessing: product.payFees.processing,
+      payCollecting: product.payFees.collect
+    }).exec(
+      {
+        error: function (err) {
+          reject(err)
+        },
+        success: function (result) {
+          let invoice = {
+            invoiceId: 'INV' + seq,
+            label: due.description,
+            organizationId: order.organizationId,
+            organizationName: order.organizationName,
+            productId: order.productId,
+            productName: order.productName,
+            productImage: order.productImage,
+            beneficiaryId: order.beneficiaryId,
+            beneficiaryFirstName: order.beneficiaryFirstName,
+            beneficiaryLastName: order.beneficiaryLastName,
+            season: order.season,
+            connectAccount: organization.connectAccount,
+            dateCharge: due.dateCharge,
+            maxDateCharge: due.maxDateCharge,
+            price: due.amount,
+            priceBase: result.basePrice,
+            paidupFee: result.feePaidUp,
+            user: {
+              userId: user._id,
+              userFirstName: user.firstName,
+              userLastName: user.lastName,
+              userEmail: user.email
+            },
+            payFees: product.payFees,
+            processingFees: product.processingFees,
+            paymentDetails: {
+              externalCustomerId: user.externalCustomerId,
+              statementDescriptor: product.statementDescriptor,
+              paymentMethodtype: due.account.object,
+              externalPaymentMethodId: due.account.id,
+              brand: due.account.brand || due.account.bank_name,
+              last4: due.account.last4
+            },
+            status: 'autopay'
+          }
+          resolve(invoice)
+        }
       }
-    }
-  )
+    )
+  })
 }
 
 function generateInvoices (order, dues, product, user) {
-  let invoices = []
+  let calcPromises = []
   let organization
-  return getOrganization(order.organizationId).then(response => {
-    organization = response.data
-    return Sequence.next('invoice', dues.length)
-  }).then(seqs => {
-    for (let idx = 0; idx < dues.length; idx++) {
-      calculations(product, dues[idx], (reason, calculation) => {
-        let invoice = {
-          invoiceId: seqs.ids[idx],
-          label: dues[idx].description,
-
-          organizationId: order.organizationId,
-          organizationName: order.organizationName,
-          productId: order.productId,
-          productName: order.productName,
-          productImage: order.productImage,
-          beneficiaryId: order.beneficiaryId,
-          beneficiaryFirstName: order.beneficiaryFirstName,
-          beneficiaryLastName: order.beneficiaryLastName,
-          season: order.season,
-          connectAccount: organization.connectAccount,
-          dateCharge: dues[idx].dateCharge,
-          maxDateCharge: dues[idx].maxDateCharge,
-          price: dues[idx].amount,
-          priceBase: calculation.priceBase,
-          paidupFee: calculation.paidupFee,
-          user: {
-            userId: user._id,
-            userFirstName: user.firstName,
-            userLastName: user.lastName,
-            userEmail: user.email
-          },
-          payFees: product.payFees,
-          processingFees: product.processingFees,
-          paymentDetails: {
-            externalCustomerId: user.externalCustomerId,
-            statementDescriptor: product.statementDescriptor,
-            paymentMethodtype: dues[idx].account.object,
-            externalPaymentMethodId: dues[idx].account.id,
-            brand: dues[idx].account.brand || dues[idx].account.bank_name,
-            last4: dues[idx].account.last4
-          },
-          status: 'autopay'
-        }
-        invoices.push(invoice)
+  return new Promise((resolve, reject) => {
+    getOrganization(order.organizationId).then(response => {
+      organization = response.data
+      return Sequence.next('invoice', dues.length)
+    }).then(seqs => {
+      for (let idx = 0; idx < dues.length; idx++) {
+        calcPromises.push(calculations(product, dues[idx], order, organization, user, seqs.ids[idx]))
+      }
+      Promise.all(calcPromises).then(values => {
+        return resolve(values)
       })
-    }
-    return invoices
+    })
   })
 }
 
