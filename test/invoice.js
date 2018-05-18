@@ -19,7 +19,7 @@ it('POST# /checkout create invoices', done => {
     })
 })
 
-it('POST# /note add a note to invoice', done => {
+it.skip('POST# /note add a note to invoice', done => {
   let invoice = common.results.invoices[0]
   chai
     .request(server)
