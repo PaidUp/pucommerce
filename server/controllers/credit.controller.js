@@ -25,8 +25,8 @@ export default class OrganizationCotroller {
     if (!order) return HR.error(res, 'order is required', 422)
     if (!credits) return HR.error(res, 'credits is required', 422)
     creditService.checkout(order, credits)
-      .then(res => {
-        HR.send(res, res)
+      .then(values => {
+        HR.send(res, values)
       })
       .catch(reason => {
         HR.error(res, reason)
