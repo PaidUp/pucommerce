@@ -8,7 +8,7 @@ function generateCredits (order, credits) {
   return Sequence.next('credit', credits.length).then(seqs => {
     let crds = []
     for (let index = 0; index < credits.length; index++) {
-      const seq = seqs.ids[index]
+      const seq = 'CRD' + seqs.ids[index].toUpperCase()
       const credit = credits[index]
       crds.push({
         memoId: seq,

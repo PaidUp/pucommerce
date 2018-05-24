@@ -44,7 +44,7 @@ function calculations (product, due, order, organization, user, seq) {
         },
         success: function (result) {
           let invoice = {
-            invoiceId: 'INV' + seq,
+            invoiceId: 'INV' + seq.toUpperCase(),
             label: due.description,
             organizationId: order.organizationId,
             organizationName: order.organizationName,
