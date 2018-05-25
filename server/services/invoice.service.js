@@ -61,6 +61,8 @@ function calculations (product, due, order, organization, user, seq) {
             price: due.amount,
             priceBase: result.basePrice,
             paidupFee: result.feePaidUp,
+            stripeFee: result.feeStripe,
+            totalFee: result.totalFee,
             user: {
               userId: user._id,
               userFirstName: user.firstName,
