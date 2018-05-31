@@ -4,6 +4,7 @@ import { auth } from 'pu-common'
 
 const router = express.Router()
 router.post('/checkout', auth.validate, InvoiceController.checkout)
+router.post('/webhook', InvoiceController.webhook)
 router.put('/', auth.validate, InvoiceController.update)
 router.post('/note', auth.validate, InvoiceController.addNote)
 router.get('/method/:paymentMethodId', auth.validate, InvoiceController.getByPaymentMethod)

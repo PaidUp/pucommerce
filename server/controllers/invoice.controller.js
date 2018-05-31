@@ -1,5 +1,8 @@
 import { invoiceService } from '@/services'
 import { HandlerResponse as HR } from 'pu-common'
+import Stripe from 'stripe'
+import config from '@/config/environment'
+const stripe = Stripe(config.stripe.key)
 
 export default class OrganizationCotroller {
   static checkout (req, res) {
@@ -12,6 +15,31 @@ export default class OrganizationCotroller {
       .catch(reason => {
         HR.error(res, reason)
       })
+  }
+
+  static webhook (req, res) {
+    const signature = req.headers['stripe-signature']
+    let event = stripe.webhooks.constructEvent(req.rawBody, signature, config.stripe.webhook)
+    if (event && event.object && event.object.source && event.object.metadata._invoice && event.object.source.object === 'bank_account') {
+      let id = event.object.metadata._invoice
+      let status = event.object.status === 'succeeded' ? 'paidup' : event.object.status
+      let values = { status }
+      if (req.body.type === 'charge.failed') {
+        values['$push'] = {
+          attempts: {
+            code: event.object.failure_code,
+            message: event.object.failure_message
+          }
+        }
+      }
+      invoiceService.webhook({ id, values }).then(resp => {
+        HR.send(res, {msg: 'charged'})
+      }).catch(reason => {
+        HR.error(res, reason)
+      })
+    } else {
+      HR.send(res, {msg: 'no bank account'})
+    }
   }
 
   static update (req, res) {

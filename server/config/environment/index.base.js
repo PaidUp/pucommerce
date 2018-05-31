@@ -61,6 +61,10 @@ let all = {
   contract: {
     username: 'api_kHDbL5jE5Xrna4dK',
     password: 'AZvX7-712ZbuuJGBLawPbGxCCE1mreKBtFswrwDHzeg'
+  },
+  stripe: {
+    key: 'sk_test_wE4QBHe2SZH9wZ6uMZliup0g',
+    webhook: 'whsec_RkR36aQwiWeYqwNo6uqOQr7Sg3tKqjj0'
   }
 }
 
