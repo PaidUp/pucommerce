@@ -106,7 +106,6 @@ function generateInvoices (order, dues, product, user) {
             due.dateCharge = new Date(today + (counter * 300000))
             counter++
           }
-          console.log('due.dateCharge: ', due.dateCharge)
         }
         calcPromises.push(calculations(product, due, order, organization, user, seqs.ids[idx]))
       }

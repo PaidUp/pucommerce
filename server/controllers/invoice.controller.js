@@ -20,6 +20,7 @@ export default class OrganizationCotroller {
   static webhook (req, res) {
     const signature = req.headers['stripe-signature']
     let event = stripe.webhooks.constructEvent(req.rawBody, signature, config.stripe.webhook)
+    console.log('event: ', event)
     if (event && event.object && event.object.source && event.object.metadata._invoice && event.object.source.object === 'bank_account') {
       let id = event.object.metadata._invoice
       let status = event.object.status === 'succeeded' ? 'paidup' : event.object.status
