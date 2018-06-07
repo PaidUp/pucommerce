@@ -78,4 +78,12 @@ export default class OrganizationCotroller {
       .then(results => HR.send(res, results))
       .catch(reason => HR.error(res, reason))
   }
+
+  static getInvoicesByOrganization (req, res) {
+    const organizationId = req.params.organizationId
+    // const seasonId = req.params.seasonId
+    invoiceService.find({organizationId})
+      .then(results => HR.send(res, results))
+      .catch(reason => HR.error(res, reason))
+  }
 }
