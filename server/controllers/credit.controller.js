@@ -20,6 +20,12 @@ export default class OrganizationCotroller {
       .catch(reason => HR.error(res, reason))
   }
 
+  static getByOrganization (req, res) {
+    creditService.find({ organizationId: req.params.organizationId })
+      .then(cMemo => HR.send(res, cMemo))
+      .catch(reason => HR.error(res, reason))
+  }
+
   static checkout (req, res) {
     let { order, credits } = req.body
     if (!order) return HR.error(res, 'order is required', 422)

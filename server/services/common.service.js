@@ -5,6 +5,10 @@ export default class CommonService {
   constructor (model) {
     this.model = model
   }
+  model () {
+    return this.model
+  }
+
   save (entity) {
     return this.model.save(entity).then(entity => entity)
   }

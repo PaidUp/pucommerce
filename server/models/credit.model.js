@@ -8,6 +8,7 @@ const schema = {
   beneficiaryId: { type: String, required: true },
   organizationId: { type: String, required: true },
   productId: { type: String, required: true },
+  productName: { type: String, required: true },
   season: { type: String, required: true },
   status: { type: String, enum: ['paid', 'credited', 'partially_refunded', 'refunded', 'discount'] }
 }

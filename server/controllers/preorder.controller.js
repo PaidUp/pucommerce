@@ -72,4 +72,15 @@ export default class PreorderCotroller {
         return HR.error(res, reason)
       })
   }
+
+  static getByOrganization (req, res) {
+    let organizationId = req.params.organizationId
+    if (!organizationId) return HR.error(res, 'organizationId is required', 422)
+    preorderService.find({organizationId, status: 'active'})
+      .then(preorders => {
+        return HR.send(res, preorders)
+      }).catch(reason => {
+        return HR.error(res, reason)
+      })
+  }
 }
