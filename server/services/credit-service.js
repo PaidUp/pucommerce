@@ -17,6 +17,7 @@ function generateCredits (order, credits) {
         price: credit.amount,
         beneficiaryId: order.beneficiaryId,
         productId: order.productId,
+        productName: order.productName,
         organizationId: order.organizationId,
         season: order.season,
         status: credit.status,

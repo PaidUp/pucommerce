@@ -81,8 +81,10 @@ export default class OrganizationCotroller {
 
   static getInvoicesByOrganization (req, res) {
     const organizationId = req.params.organizationId
-    // const seasonId = req.params.seasonId
-    invoiceService.find({organizationId})
+    const seasonId = req.query.seasonId
+    let values = { organizationId }
+    if (seasonId) values.season = seasonId
+    invoiceService.find(values)
       .then(results => HR.send(res, results))
       .catch(reason => HR.error(res, reason))
   }
