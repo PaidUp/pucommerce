@@ -21,7 +21,11 @@ export default class OrganizationCotroller {
   }
 
   static getByOrganization (req, res) {
-    creditService.find({ organizationId: req.params.organizationId })
+    const organizationId = req.params.organizationId
+    const season = req.query.seasonId
+    if (!organizationId) return HR.error(res, 'organizationId is required', 422)
+    if (!season) return HR.error(res, 'season is required', 422)
+    creditService.find({ organizationId, season })
       .then(cMemo => HR.send(res, cMemo))
       .catch(reason => HR.error(res, reason))
   }

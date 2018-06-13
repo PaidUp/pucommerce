@@ -11,6 +11,7 @@ const schema = {
   organizationId: { type: String, required: true },
   productId: { type: String },
   productName: { type: String },
+  season: { type: String },
   beneficiaryId: { type: String, required: true },
   planId: { type: String },
   assigneeEmail: { type: String, required: true },
