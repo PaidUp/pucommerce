@@ -25,6 +25,11 @@ export default class OrganizationCotroller {
     const season = req.query.seasonId
     if (!organizationId) return HR.error(res, 'organizationId is required', 422)
     if (!season) return HR.error(res, 'season is required', 422)
+    const productId = req.query.productId
+    const beneficiaryId = req.query.beneficiaryId
+    let values = { organizationId, season }
+    if (productId) values.productId = productId
+    if (beneficiaryId) values.beneficiaryId = beneficiaryId
     creditService.find({ organizationId, season })
       .then(cMemo => HR.send(res, cMemo))
       .catch(reason => HR.error(res, reason))

@@ -76,9 +76,14 @@ export default class PreorderCotroller {
   static getByOrganization (req, res) {
     let organizationId = req.params.organizationId
     const season = req.query.seasonId
+    const productId = req.query.productId
+    const beneficiaryId = req.query.beneficiaryId
     if (!organizationId) return HR.error(res, 'organizationId is required', 422)
     if (!season) return HR.error(res, 'seasonId is required', 422)
-    preorderService.find({organizationId, season, status: 'active'})
+    let values = {organizationId, season, status: 'active'}
+    if (productId) values.productId = productId
+    if (beneficiaryId) values.beneficiaryId = beneficiaryId
+    preorderService.find(values)
       .then(preorders => {
         return HR.send(res, preorders)
       }).catch(reason => {
