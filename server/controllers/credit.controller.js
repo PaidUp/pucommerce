@@ -30,7 +30,7 @@ export default class OrganizationCotroller {
     let values = { organizationId, season }
     if (productId) values.productId = productId
     if (beneficiaryId) values.beneficiaryId = beneficiaryId
-    creditService.find({ organizationId, season })
+    creditService.find(values)
       .then(cMemo => HR.send(res, cMemo))
       .catch(reason => HR.error(res, reason))
   }
