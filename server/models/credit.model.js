@@ -6,6 +6,7 @@ const schema = {
   description: { type: String, required: true },
   price: { type: Number, required: true },
   beneficiaryId: { type: String, required: true },
+  assigneeEmail: { type: String, required: true },
   organizationId: { type: String, required: true },
   productId: { type: String, required: true },
   productName: { type: String, required: true },

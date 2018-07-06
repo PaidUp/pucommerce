@@ -62,10 +62,15 @@ export default class PreorderCotroller {
 
   static getByBeneficiary (req, res) {
     let beneficiaryId = req.params.beneficiaryId
-
     if (!beneficiaryId) return HR.error(res, 'beneficiaryId is required', 422)
 
-    preorderService.find({beneficiaryId, status: 'active'})
+    if (!req.params.beneficiaryId) return HR.error(res, 'beneficiaryId is required', 422)
+    let params = {
+      beneficiaryId: req.params.beneficiaryId
+    }
+    const assignee = req.query.assegnee
+    if (assignee) params['assigneeEmail'] = assignee
+    preorderService.find(params)
       .then(preorders => {
         return HR.send(res, preorders)
       }).catch(reason => {

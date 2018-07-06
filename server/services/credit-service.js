@@ -4,7 +4,7 @@ import { Sequence } from 'pu-common'
 
 let creditService
 
-function generateCredits (order, credits) {
+function generateCredits (order, credits, user) {
   return Sequence.next('credit', credits.length).then(seqs => {
     let crds = []
     for (let index = 0; index < credits.length; index++) {
@@ -16,6 +16,7 @@ function generateCredits (order, credits) {
         description: credit.description,
         price: credit.amount,
         beneficiaryId: order.beneficiaryId,
+        assigneeEmail: user.email,
         productId: order.productId,
         productName: order.productName,
         organizationId: order.organizationId,
@@ -33,9 +34,9 @@ class CreditService extends CommonService {
     super(new CreditModel())
   }
 
-  checkout (order, credits) {
+  checkout (order, credits, user) {
     return new Promise((resolve, reject) => {
-      generateCredits(order, credits).then(crds => {
+      generateCredits(order, credits, user).then(crds => {
         this.insertMany(crds).then(result => resolve(result))
       }).catch(reason => reject(reason))
     })

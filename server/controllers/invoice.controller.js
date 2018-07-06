@@ -73,8 +73,13 @@ export default class OrganizationCotroller {
   }
 
   static getInvoicesByBeneficiary (req, res) {
-    const beneficiaryId = req.params.beneficiaryId
-    invoiceService.find({beneficiaryId})
+    if (!req.params.beneficiaryId) return HR.error(res, 'beneficiaryId is required', 422)
+    let params = {
+      beneficiaryId: req.params.beneficiaryId
+    }
+    const assignee = req.query.assegnee
+    if (assignee) params['user.userEmail'] = assignee
+    invoiceService.find(params)
       .then(results => HR.send(res, results))
       .catch(reason => HR.error(res, reason))
   }

@@ -15,7 +15,13 @@ export default class OrganizationCotroller {
   }
 
   static getByBeneficiary (req, res) {
-    creditService.find({ beneficiaryId: req.params.beneficiaryId })
+    if (!req.params.beneficiaryId) return HR.error(res, 'beneficiaryId is required', 422)
+    let params = {
+      beneficiaryId: req.params.beneficiaryId
+    }
+    const assignee = req.query.assegnee
+    if (assignee) params['assigneeEmail'] = assignee
+    creditService.find(params)
       .then(cMemo => HR.send(res, cMemo))
       .catch(reason => HR.error(res, reason))
   }
@@ -36,10 +42,10 @@ export default class OrganizationCotroller {
   }
 
   static checkout (req, res) {
-    let { order, credits } = req.body
+    let { order, credits, user = req.user } = req.body
     if (!order) return HR.error(res, 'order is required', 422)
     if (!credits) return HR.error(res, 'credits is required', 422)
-    creditService.checkout(order, credits)
+    creditService.checkout(order, credits, user)
       .then(values => {
         HR.send(res, values)
       })
