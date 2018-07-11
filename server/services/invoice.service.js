@@ -139,6 +139,44 @@ class InvoiceService extends CommonService {
   webhook ({ id, values }) {
     return this.model.updateById(id, values)
   }
+
+  updateInvoice (id, values, product) {
+    const model = this.model
+    return new Promise((resolve, reject) => {
+      console.log('product: ', product)
+      productPriceV2({
+        type: values.paymentDetails.paymentMethodtype,
+        capAmount: product.processingFees.achFeeCap,
+        originalPrice: values.price,
+        stripePercent: product.processingFees.cardFee,
+        stripeFlat: product.processingFees.cardFeeFlat,
+        stripeAchPercent: product.processingFees.achFee,
+        stripeAchFlat: product.processingFees.achFeeFlat,
+        paidUpFee: product.collectionFees.fee,
+        paidUpFlat: product.collectionFees.feeFlat,
+        discount: 0,
+        payProcessing: product.payFees.processing,
+        payCollecting: product.payFees.collect
+      }).exec(
+        {
+          error: function (err) {
+            reject(err)
+          },
+          success: function (result) {
+            values['priceBase'] = result.basePrice
+            values['paidupFee'] = result.feePaidUp
+            values['stripeFee'] = result.feeStripe
+            values['totalFee'] = result.totalFee
+            values['processingFees'] = product.processingFees
+            values['payFees'] = product.payFees
+            model.updateById(id, values)
+              .then(result => resolve(result))
+              .catch(reason => reject(reason))
+          }
+        }
+      )
+    })
+  }
 }
 
 invoiceService = new InvoiceService()
