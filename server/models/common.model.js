@@ -60,6 +60,7 @@ export default class CommonModel {
   }
 
   updateById (id, value) {
+    value['$inc'] = {__v: 1}
     return new Promise((resolve, reject) => {
       try {
         this.Model.findByIdAndUpdate(id, value, { new: true }, (err, data) => {

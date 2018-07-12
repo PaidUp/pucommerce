@@ -143,7 +143,6 @@ class InvoiceService extends CommonService {
   updateInvoice (id, values, product) {
     const model = this.model
     return new Promise((resolve, reject) => {
-      console.log('product: ', product)
       productPriceV2({
         type: values.paymentDetails.paymentMethodtype,
         capAmount: product.processingFees.achFeeCap,
