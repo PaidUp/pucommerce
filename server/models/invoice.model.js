@@ -66,7 +66,7 @@ const schema = {
   paymentDetails: { type: paymentDetails, required: true },
   payFees: { type: payFees, required: true },
   attempts: { type: Array, default: [] },
-  status: { type: String, required: true, default: 'autopay', enum: ['autopay', 'charged', 'failed', 'refunded'] }
+  status: { type: String, required: true, default: 'autopay', enum: ['paidup', 'autopay', 'failed', 'refunded'] }
 }
 
 export default class InvoiceModel extends CommonModel {
