@@ -176,6 +176,46 @@ class InvoiceService extends CommonService {
       )
     })
   }
+
+  newInvoice (id, values, product) {
+    const model = this.model
+    return new Promise((resolve, reject) => {
+      productPriceV2({
+        type: values.paymentDetails.paymentMethodtype,
+        capAmount: product.processingFees.achFeeCap,
+        originalPrice: values.price,
+        stripePercent: product.processingFees.cardFee,
+        stripeFlat: product.processingFees.cardFeeFlat,
+        stripeAchPercent: product.processingFees.achFee,
+        stripeAchFlat: product.processingFees.achFeeFlat,
+        paidUpFee: product.collectionFees.fee,
+        paidUpFlat: product.collectionFees.feeFlat,
+        discount: 0,
+        payProcessing: product.payFees.processing,
+        payCollecting: product.payFees.collect
+      }).exec(
+        {
+          error: function (err) {
+            reject(err)
+          },
+          success: function (result) {
+            values['priceBase'] = result.basePrice
+            values['paidupFee'] = result.feePaidUp
+            values['stripeFee'] = result.feeStripe
+            values['totalFee'] = result.totalFee
+            values['processingFees'] = product.processingFees
+            values['payFees'] = product.payFees
+            Sequence.next('invoice', 1).then(seqs => {
+              values['invoiceId'] = seqs.ids[0]
+              model.save(values).then(invoice => {
+                resolve(invoice)
+              }).catch(reason => reject(reason))
+            })
+          }
+        }
+      )
+    })
+  }
 }
 
 invoiceService = new InvoiceService()
