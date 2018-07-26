@@ -206,7 +206,7 @@ class InvoiceService extends CommonService {
             values['processingFees'] = product.processingFees
             values['payFees'] = product.payFees
             Sequence.next('invoice', 1).then(seqs => {
-              values['invoiceId'] = seqs.ids[0]
+              values['invoiceId'] = 'INV' + seqs.ids[0]
               model.save(values).then(invoice => {
                 resolve(invoice)
               }).catch(reason => reject(reason))
