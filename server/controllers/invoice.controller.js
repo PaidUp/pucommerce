@@ -68,11 +68,10 @@ export default class OrganizationCotroller {
   }
 
   static newInvoice (req, res) {
-    let { id, values, product } = req.body
-    if (!id) return HR.error(res, 'id is required', 422)
+    let { values, product } = req.body
     if (!values) return HR.error(res, 'values is required', 422)
     if (!product) return HR.error(res, 'product is required', 422)
-    invoiceService.newInvoice(id, values, product)
+    invoiceService.newInvoice(values, product)
       .then(invoice => {
         return HR.send(res, invoice)
       }).catch(reason => {

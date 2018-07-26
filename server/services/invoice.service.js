@@ -177,7 +177,7 @@ class InvoiceService extends CommonService {
     })
   }
 
-  newInvoice (id, values, product) {
+  newInvoice (values, product) {
     const model = this.model
     return new Promise((resolve, reject) => {
       productPriceV2({
