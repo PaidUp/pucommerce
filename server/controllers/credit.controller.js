@@ -3,11 +3,19 @@ import { HandlerResponse as HR } from 'pu-common'
 
 export default class OrganizationCotroller {
   static addCreditMeno (req, res) {
-    let { label, price, dateCharge, status } = req.body
+    let { label, description, price, beneficiaryId, assigneeEmail, productId, productName, organizationId, season, status, dateCharge } = req.body
     if (!label) return HR.error(res, 'label is required', 422)
+    if (!description) return HR.error(res, 'description is required', 422)
     if (!price) return HR.error(res, 'price is required', 422)
-    if (!dateCharge) return HR.error(res, 'dateCharge is required', 422)
+    if (!beneficiaryId) return HR.error(res, 'beneficiaryId is required', 422)
+    if (!assigneeEmail) return HR.error(res, 'assigneeEmail is required', 422)
+    if (!productId) return HR.error(res, 'productId is required', 422)
+    if (!productName) return HR.error(res, 'productName is required', 422)
+    if (!organizationId) return HR.error(res, 'organizationId is required', 422)
+    if (!season) return HR.error(res, 'season is required', 422)
     if (!status) return HR.error(res, 'status is required', 422)
+    if (!dateCharge) return HR.error(res, 'dateCharge is required', 422)
+    req.body.createOn = new Date(dateCharge)
 
     creditService.add(req.body)
       .then(cMemo => HR.send(res, cMemo))

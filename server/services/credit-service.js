@@ -22,7 +22,7 @@ function generateCredits (order, credits, user) {
         organizationId: order.organizationId,
         season: order.season,
         status: credit.status,
-        dateCharge: new Date(credit.dateCharge)
+        createOn: new Date(credit.dateCharge)
       })
     }
     return crds
@@ -42,10 +42,10 @@ class CreditService extends CommonService {
     })
   }
 
-  add ({label, description, price, orderId, status}) {
+  add ({ label, description, price, beneficiaryId, assigneeEmail, productId, productName, organizationId, season, status, createOn }) {
     return Sequence.next('cmemo').then(values => {
-      let memoId = 'CMEMO' + values.ids[0]
-      return this.save({ memoId, label, description, price, orderId, status })
+      let memoId = 'CMEMO' + values.ids[0].toUpperCase()
+      return this.save({ memoId, label, description, price, beneficiaryId, assigneeEmail, productId, productName, organizationId, season, status, createOn })
     })
   }
 }
