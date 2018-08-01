@@ -79,6 +79,13 @@ export default class OrganizationCotroller {
       })
   }
 
+  static delete (req, res) {
+    if (!req.params.id) return HR.error(res, 'id is required', 422)
+    invoiceService.model.removeById(req.params.id)
+      .then(data => HR.send(res, data))
+      .catch(reason => HR.error(res, reason))
+  }
+
   static addNote (req, res) {
     let { id, note } = req.body
     if (!id) return HR.error(res, 'id is required', 422)

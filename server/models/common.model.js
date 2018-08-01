@@ -77,6 +77,15 @@ export default class CommonModel {
     return this.Model.findById(_id).exec()
   }
 
+  removeById (_id) {
+    return new Promise((resolve, reject) => {
+      this.Model.findByIdAndRemove(_id, (err, doc) => {
+        if (err) return reject(err)
+        resolve(doc)
+      })
+    })
+  }
+
   insertMany (arr) {
     return new Promise((resolve, reject) => {
       this.Model.insertMany(arr, (error, docs) => {

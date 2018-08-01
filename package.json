@@ -40,7 +40,7 @@
     "machinepack-calculations": "git+ssh://github.com/PaidUp/machinepack-calculations.git#v0.8.10",
     "method-override": "^2.3.5",
     "moment": "^2.20.1",
-    "mongoose": "^5.0.1",
+    "mongoose": "^5.2.6",
     "morgan": "^1.9.0",
     "node-uuid": "^1.4.8",
     "pmx": "^0.6.1",

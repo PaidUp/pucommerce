@@ -11,7 +11,7 @@ const schema = {
   productId: { type: String, required: true },
   productName: { type: String, required: true },
   season: { type: String, required: true },
-  status: { type: String, enum: ['paid', 'credited', 'partially_refunded', 'refunded', 'discount'] }
+  status: { type: String, enum: ['paid', 'credited', 'refunded', 'discount'] }
 }
 
 export default class CreditMemoModel extends CommonModel {

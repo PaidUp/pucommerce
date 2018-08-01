@@ -26,6 +26,7 @@ let all = {
       ssl: true,
       replicaSet: 'pu-dev-shard-0',
       authSource: 'admin',
+      useNewUrlParser: true,
       autoIndex: false, // Don't build indexes
       reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
       reconnectInterval: 1000, // Reconnect every 500ms

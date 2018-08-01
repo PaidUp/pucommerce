@@ -3,6 +3,7 @@ import { HandlerResponse as HR } from 'pu-common'
 
 export default class OrganizationCotroller {
   static addCreditMeno (req, res) {
+    console.log('req.body: ', req.body)
     let { label, description, price, beneficiaryId, assigneeEmail, productId, productName, organizationId, season, status, dateCharge } = req.body
     if (!label) return HR.error(res, 'label is required', 422)
     if (!description) return HR.error(res, 'description is required', 422)
@@ -19,6 +20,28 @@ export default class OrganizationCotroller {
 
     creditService.add(req.body)
       .then(cMemo => HR.send(res, cMemo))
+      .catch(reason => HR.error(res, reason))
+  }
+
+  static update (req, res) {
+    let { id, values } = req.body
+    console.log('req.body: ', req.body)
+    if (!id) return HR.error(res, 'id is required', 422)
+    if (!values.label) return HR.error(res, 'label is required', 422)
+    if (!values.price) return HR.error(res, 'price is required', 422)
+    if (!values.assigneeEmail) return HR.error(res, 'assigneeEmail is required', 422)
+    if (!values.status) return HR.error(res, 'status is required', 422)
+    if (!values.dateCharge) return HR.error(res, 'dateCharge is required', 422)
+    values.createOn = new Date(values.dateCharge)
+    creditService.updateById(id, values)
+      .then(data => HR.send(res, data))
+      .catch(reason => HR.error(res, reason))
+  }
+
+  static delete (req, res) {
+    if (!req.params.id) return HR.error(res, 'id is required', 422)
+    creditService.model.removeById(req.params.id)
+      .then(data => HR.send(res, data))
       .catch(reason => HR.error(res, reason))
   }
 
