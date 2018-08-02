@@ -13,5 +13,6 @@ router.post('/note', auth.validate, InvoiceController.addNote)
 router.get('/method/:paymentMethodId', auth.validate, InvoiceController.getByPaymentMethod)
 router.get('/beneficiary/:beneficiaryId', auth.validate, InvoiceController.getInvoicesByBeneficiary)
 router.get('/organization/:organizationId', auth.validate, InvoiceController.getInvoicesByOrganization)
+router.get('/:id', auth.validate, InvoiceController.getById)
 
 export default router

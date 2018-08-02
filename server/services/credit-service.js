@@ -43,7 +43,7 @@ class CreditService extends CommonService {
   }
 
   add ({ label, description, price, beneficiaryId, assigneeEmail, productId, productName, organizationId, season, status, createOn }) {
-    return Sequence.next('cmemo').then(values => {
+    return Sequence.next('credit').then(values => {
       let memoId = 'CRD' + values.ids[0].toUpperCase()
       return this.save({ memoId, label, description, price, beneficiaryId, assigneeEmail, productId, productName, organizationId, season, status, createOn })
     })
