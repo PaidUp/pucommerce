@@ -55,10 +55,9 @@ export default class OrganizationCotroller {
   }
 
   static getById (req, res) {
-    let { id, values } = req.body
+    let id = req.params.id
     if (!id) return HR.error(res, 'id is required', 422)
-    if (!values) return HR.error(res, 'values is required', 422)
-    invoiceService.updateById(id, values)
+    invoiceService.getById(id)
       .then(invoice => {
         return HR.send(res, invoice)
       }).catch(reason => {
