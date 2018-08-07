@@ -1,9 +1,12 @@
 import { InvoiceModel } from '@/models'
 import CommonService from './common.service'
 import axios from 'axios'
-import { Sequence } from 'pu-common'
+import moment from 'moment'
+import numeral from 'numeral'
+import { Sequence, Email } from 'pu-common'
 import config from '@/config/environment'
 import { productPriceV2 } from 'machinepack-calculations'
+const email = new Email(config.email.options)
 
 let invoiceService
 let apiOrganization = axios.create({
@@ -17,6 +20,15 @@ let apiUser = axios.create({
   timeout: 10000,
   headers: {'x-api-key': config.auth.key}
 })
+
+function capitalize (value) {
+  return value.replace(
+    /\w\S*/g,
+    function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    }
+  )
+}
 
 function getOrganization (organizationId) {
   return apiOrganization.get(`/${organizationId}`)
@@ -116,6 +128,32 @@ function generateInvoices (order, dues, product, user) {
   })
 }
 
+function buildTableInvoices (invoices) {
+  let rows = ''
+  invoices.forEach(invoice => {
+    rows = rows + `<tr>
+    <td>${invoice.label}</td>
+    <td>${moment(invoice.dateCharge).format('MM-DD-YYYY')}</td>
+    <td>$${numeral(invoice.price).format('0,0.00')}</td>
+    <td>${invoice.paymentDetails.brand}••••${invoice.paymentDetails.last4}</td>
+    <td>${capitalize(invoice.status)}</td></tr>`
+  })
+  return `<table style="width: 100%; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 300; font-family: helvetica, arial, sans-serif; font-size: 14px; color: rgb(102, 102, 102);">
+    <thead>
+      <tr>
+        <th style="font-weight: bold">Description</th>
+        <th style="font-weight: bold">Date</th>
+        <th style="font-weight: bold">Price</th>
+        <th style="font-weight: bold">Account</th>
+        <th style="font-weight: bold">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${rows}
+    </tbody>
+    </table>`
+}
+
 class InvoiceService extends CommonService {
   constructor () {
     super(new InvoiceModel())
@@ -127,6 +165,14 @@ class InvoiceService extends CommonService {
         .then(response => {
           generateInvoices(order, dues, product, response.data).then(invoices => {
             this.insertMany(invoices).then(result => resolve(result))
+            email.sendTemplate(invoices[0].user.userEmail, config.email.templates.checkout, {
+              orgName: invoices[0].organizationName,
+              userFirstName: invoices[0].user.userFirstName,
+              beneficiaryFirstName: invoices[0].beneficiaryFirstName,
+              beneficiaryLastName: invoices[0].beneficiaryLastName,
+              productName: invoices[0].productName,
+              invoices: buildTableInvoices(invoices)
+            })
           })
         }).catch(reason => reject(reason))
     })

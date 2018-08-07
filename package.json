@@ -43,8 +43,9 @@
     "mongoose": "^5.2.6",
     "morgan": "^1.9.0",
     "node-uuid": "^1.4.8",
+    "numeral": "^2.0.6",
     "pmx": "^0.6.1",
-    "pu-common": "git+ssh://git@github.com:PaidUp/PUCommon.git#0.18.2",
+    "pu-common": "git+ssh://git@github.com:PaidUp/PUCommon.git#0.19.11",
     "stripe": "^6.0.0"
   },
   "devDependencies": {
