@@ -70,8 +70,8 @@ let all = {
   email: {
     options: {
       apiKey: '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',
-      fromName: 'Felipe',
-      fromEmail: 'felipe@getpaidup.com'
+      fromName: 'Support',
+      fromEmail: 'support@getpaidup.com'
     },
     templates: {
       checkout: 'e6be06bd-d125-4dd6-914d-2085f2382441'
