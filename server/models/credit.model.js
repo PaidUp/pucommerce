@@ -11,6 +11,7 @@ const schema = {
   productId: { type: String, required: true },
   productName: { type: String, required: true },
   season: { type: String, required: true },
+  tags: { type: [String] },
   status: { type: String, enum: ['paid', 'credited', 'refunded', 'discount'] }
 }
 

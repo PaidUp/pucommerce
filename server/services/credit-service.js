@@ -21,6 +21,7 @@ function generateCredits (order, credits, user) {
         productName: order.productName,
         organizationId: order.organizationId,
         season: order.season,
+        tags: credit.tags,
         status: credit.status,
         createOn: new Date(credit.dateCharge)
       })

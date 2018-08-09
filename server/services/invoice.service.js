@@ -91,6 +91,7 @@ function calculations (product, due, order, organization, user, seq) {
               brand: due.account.brand || due.account.bank_name,
               last4: due.account.last4
             },
+            tags: due.tags,
             status: 'autopay'
           }
           resolve(invoice)
