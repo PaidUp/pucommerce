@@ -209,6 +209,9 @@ class InvoiceService extends CommonService {
             reject(err)
           },
           success: function (result) {
+            let dateCharge = new Date(values.dateCharge)
+            dateCharge.setUTCHours(15)
+            values['dateCharge'] = dateCharge
             values['priceBase'] = result.basePrice
             values['paidupFee'] = result.feePaidUp
             values['stripeFee'] = result.feeStripe
@@ -246,6 +249,9 @@ class InvoiceService extends CommonService {
             reject(err)
           },
           success: function (result) {
+            let dateCharge = new Date(values.dateCharge)
+            dateCharge.setUTCHours(15)
+            values['dateCharge'] = dateCharge
             values['priceBase'] = result.basePrice
             values['paidupFee'] = result.feePaidUp
             values['stripeFee'] = result.feeStripe
