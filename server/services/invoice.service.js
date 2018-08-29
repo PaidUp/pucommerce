@@ -112,10 +112,13 @@ function generateInvoices (order, dues, product, user) {
       let counter = 0
       for (let idx = 0; idx < dues.length; idx++) {
         let due = dues[idx]
+        let dateCharge = new Date(due.dateCharge)
+        dateCharge.setUTCHours(16)
+        due.dateCharge = dateCharge
         if (due.account.object === 'bank_account') {
-          let today = new Date().getTime()
-          let dateCharge = new Date(due.dateCharge).getTime()
-          if (dateCharge <= today) {
+          let today = new Date().setUTCHours(16)
+          let dc = due.dateCharge.getTime()
+          if (dc <= today) {
             due.dateCharge = new Date(today + (counter * 300000))
             counter++
           }
@@ -210,7 +213,7 @@ class InvoiceService extends CommonService {
           },
           success: function (result) {
             let dateCharge = new Date(values.dateCharge)
-            dateCharge.setUTCHours(15)
+            dateCharge.setUTCHours(16)
             values['dateCharge'] = dateCharge
             values['priceBase'] = result.basePrice
             values['paidupFee'] = result.feePaidUp
@@ -250,7 +253,7 @@ class InvoiceService extends CommonService {
           },
           success: function (result) {
             let dateCharge = new Date(values.dateCharge)
-            dateCharge.setUTCHours(15)
+            dateCharge.setUTCHours(16)
             values['dateCharge'] = dateCharge
             values['priceBase'] = result.basePrice
             values['paidupFee'] = result.feePaidUp

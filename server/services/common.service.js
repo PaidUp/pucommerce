@@ -14,6 +14,11 @@ export default class CommonService {
   }
 
   updateById (id, values) {
+    if (values.dateCharge) {
+      let tmpDate = new Date(values.dateCharge)
+      tmpDate.setUTCHours(16)
+      values.dateCharge = tmpDate
+    }
     return this.model.updateById(id, values).then(entity => entity)
   }
 
