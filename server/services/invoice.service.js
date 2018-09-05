@@ -1,5 +1,6 @@
 import { InvoiceModel } from '@/models'
 import CommonService from './common.service'
+import Calculations from './calculations'
 import axios from 'axios'
 import moment from 'moment'
 import numeral from 'numeral'
@@ -34,7 +35,54 @@ function getOrganization (organizationId) {
   return apiOrganization.get(`/${organizationId}`)
 }
 
+function buildUnbundleInvoce (product, due, order, organization, user, seq) {
+  let calculation = Calculations.exec(product, due)
+  let invoice = {
+    invoiceId: 'INV' + seq.toUpperCase(),
+    label: due.description,
+    organizationId: order.organizationId,
+    organizationName: order.organizationName,
+    productId: order.productId,
+    productName: order.productName,
+    productImage: order.productImage,
+    beneficiaryId: order.beneficiaryId,
+    beneficiaryFirstName: order.beneficiaryFirstName,
+    beneficiaryLastName: order.beneficiaryLastName,
+    season: order.season,
+    connectAccount: organization.connectAccount,
+    dateCharge: due.dateCharge,
+    maxDateCharge: due.maxDateCharge,
+    priceBase: due.amount,
+    price: calculation.price,
+    paidupFee: calculation.paidupFee,
+    stripeFee: calculation.processingFee,
+    totalFee: calculation.totalFee,
+    user: {
+      userId: user._id,
+      userFirstName: user.firstName,
+      userLastName: user.lastName,
+      userEmail: user.email
+    },
+    payFees: product.payFees,
+    processingFees: product.processingFees,
+    paymentDetails: {
+      externalCustomerId: user.externalCustomerId,
+      statementDescriptor: product.statementDescriptor,
+      paymentMethodtype: due.account.object,
+      externalPaymentMethodId: due.account.id,
+      brand: due.account.brand || due.account.bank_name,
+      last4: due.account.last4
+    },
+    tags: due.tags,
+    status: 'autopay'
+  }
+  return invoice
+}
+
 function calculations (product, due, order, organization, user, seq) {
+  if (product.unbundle) {
+    return buildUnbundleInvoce(product, due, order, organization, user, seq)
+  }
   return new Promise((resolve, reject) => {
     productPriceV2({
       type: due.account.object,
