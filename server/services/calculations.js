@@ -1,11 +1,11 @@
 import { Math } from 'pu-common'
 
-function card (product, due) {
+function card (product, amount) {
   const cardFee = product.processingFees.cardFee / 100
   const cardFeeFlat = product.processingFees.cardFeeFlat
   const paidUpFee = product.collectionFees.fee / 100
   const paidUpFeeFlat = product.collectionFees.feeFlat
-  const basePrice = due.amount
+  const basePrice = amount
 
   let result = {
     paidupFee: 0,
@@ -21,13 +21,13 @@ function card (product, due) {
   return result
 }
 
-function bank (product, due) {
+function bank (product, amount) {
   // const achFeeCap = product.processingFees.achFeeCap
   const achFee = (product.processingFees.achFee / 100)
   const achFeeFlat = product.processingFees.achFeeFlat
   const paidUpFee = product.collectionFees.fee / 100
   const paidUpFeeFlat = product.collectionFees.feeFlat
-  const basePrice = due.amount
+  const basePrice = amount
 
   let result = {
     paidupFee: 0,
@@ -45,12 +45,12 @@ function bank (product, due) {
 }
 
 export default class Calculations {
-  static exec (product, due) {
+  static exec (product, type, amount) {
     let result
-    if (due.account.object === 'card') {
-      result = card(product, due)
-    } else if (due.account.object === 'bank_account') {
-      result = bank(product, due)
+    if (type === 'card') {
+      result = card(product, amount)
+    } else if (type === 'bank_account') {
+      result = bank(product, amount)
     }
     return result
   }

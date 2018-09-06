@@ -46,6 +46,14 @@ export default class OrganizationCotroller {
     let { id, values } = req.body
     if (!id) return HR.error(res, 'id is required', 422)
     if (!values) return HR.error(res, 'values is required', 422)
+    if (values.unbundle) {
+      return invoiceService.update(id, values)
+        .then(invoice => {
+          return HR.send(res, invoice)
+        }).catch(reason => {
+          return HR.error(res, reason)
+        })
+    }
     invoiceService.updateById(id, values)
       .then(invoice => {
         return HR.send(res, invoice)

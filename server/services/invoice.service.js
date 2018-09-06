@@ -36,7 +36,7 @@ function getOrganization (organizationId) {
 }
 
 function buildUnbundleInvoce (product, due, order, organization, user, seq) {
-  let calculation = Calculations.exec(product, due)
+  let calculation = Calculations.exec(product, due.account.object, due.baseAmount)
   let invoice = {
     invoiceId: 'INV' + seq.toUpperCase(),
     label: due.description,
@@ -74,6 +74,7 @@ function buildUnbundleInvoce (product, due, order, organization, user, seq) {
       brand: due.account.brand || due.account.bank_name,
       last4: due.account.last4
     },
+    collectionFees: product.collectionFees,
     tags: due.tags,
     status: 'autopay'
   }
@@ -238,6 +239,17 @@ class InvoiceService extends CommonService {
 
   webhook ({ id, values }) {
     return this.model.updateById(id, values)
+  }
+
+  update (id, values) {
+    return this.getById(id).then(invoice => {
+      let calculation = Calculations.exec(invoice, invoice.paymentDetails.paymentMethodtype, invoice.priceBase)
+      values.price = calculation.price
+      values.paidupFee = calculation.paidupFee
+      values.stripeFee = calculation.processingFee
+      values.totalFee = calculation.totalFee
+      return this.model.updateById(id, values)
+    })
   }
 
   updateInvoice (id, values, product) {

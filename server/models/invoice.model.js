@@ -35,6 +35,11 @@ const customInfo = {
   displayed: { type: Boolean, required: true }
 }
 
+const collectionFees = {
+  fee: { type: Number, required: true },
+  feeFlat: { type: Number, required: true }
+}
+
 const schema = {
   invoiceId: { type: String, required: true },
   label: { type: String, required: true },
@@ -68,6 +73,7 @@ const schema = {
   attempts: { type: Array, default: [] },
   tags: { type: [String] },
   unbundle: { type: Boolean },
+  collectionFees: { type: collectionFees },
   status: { type: String, required: true, default: 'autopay', enum: ['paidup', 'autopay', 'failed', 'refunded'] }
 }
 
