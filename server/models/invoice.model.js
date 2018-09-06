@@ -67,6 +67,7 @@ const schema = {
   payFees: { type: payFees, required: true },
   attempts: { type: Array, default: [] },
   tags: { type: [String] },
+  unbundle: { type: Boolean },
   status: { type: String, required: true, default: 'autopay', enum: ['paidup', 'autopay', 'failed', 'refunded'] }
 }
 
