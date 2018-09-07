@@ -243,7 +243,7 @@ class InvoiceService extends CommonService {
 
   update (id, values) {
     return this.getById(id).then(invoice => {
-      let calculation = Calculations.exec(invoice, invoice.paymentDetails.paymentMethodtype, invoice.priceBase)
+      let calculation = Calculations.exec(invoice, values.paymentDetails.paymentMethodtype, invoice.priceBase)
       values.price = calculation.price
       values.paidupFee = calculation.paidupFee
       values.stripeFee = calculation.processingFee
