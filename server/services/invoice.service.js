@@ -254,6 +254,22 @@ class InvoiceService extends CommonService {
 
   updateInvoice (id, values, product) {
     const model = this.model
+    if (values.unbundle) {
+      let calculation = Calculations.exec(product, values.paymentDetails.paymentMethodtype, values.priceBase)
+      let dateCharge = new Date(values.dateCharge)
+      dateCharge.setUTCHours(16)
+      values['dateCharge'] = dateCharge
+      values['priceBase'] = values.priceBase
+      values['price'] = calculation.price
+      values['paidupFee'] = calculation.paidupFee
+      values['stripeFee'] = calculation.processingFee
+      values['totalFee'] = calculation.totalFee
+      values['processingFees'] = product.processingFees
+      values['payFees'] = product.payFees
+      return model.updateById(id, values)
+        .then(result => result)
+        .catch(reason => reason)
+    }
     return new Promise((resolve, reject) => {
       productPriceV2({
         type: values.paymentDetails.paymentMethodtype,
