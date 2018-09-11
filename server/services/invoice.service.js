@@ -256,6 +256,7 @@ class InvoiceService extends CommonService {
     const model = this.model
     if (values.unbundle) {
       let calculation = Calculations.exec(product, values.paymentDetails.paymentMethodtype, values.priceBase)
+      console.log('calculation: ', calculation)
       let dateCharge = new Date(values.dateCharge)
       dateCharge.setUTCHours(16)
       values['dateCharge'] = dateCharge
@@ -310,6 +311,27 @@ class InvoiceService extends CommonService {
 
   newInvoice (values, product) {
     const model = this.model
+    if (values.unbundle) {
+      let calculation = Calculations.exec(product, values.paymentDetails.paymentMethodtype, values.priceBase)
+      let dateCharge = new Date(values.dateCharge)
+      dateCharge.setUTCHours(16)
+      values['dateCharge'] = dateCharge
+      values['priceBase'] = values.priceBase
+      values['price'] = calculation.price
+      values['paidupFee'] = calculation.paidupFee
+      values['stripeFee'] = calculation.processingFee
+      values['totalFee'] = calculation.totalFee
+      values['processingFees'] = product.processingFees
+      values['payFees'] = product.payFees
+      return new Promise((resolve, reject) => {
+        Sequence.next('invoice', 1).then(seqs => {
+          values['invoiceId'] = 'INV' + seqs.ids[0].toUpperCase()
+          model.save(values).then(invoice => {
+            resolve(invoice)
+          }).catch(reason => reject(reason))
+        })
+      })
+    }
     return new Promise((resolve, reject) => {
       productPriceV2({
         type: values.paymentDetails.paymentMethodtype,
