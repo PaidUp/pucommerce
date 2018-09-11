@@ -322,6 +322,7 @@ class InvoiceService extends CommonService {
       values['stripeFee'] = calculation.processingFee
       values['totalFee'] = calculation.totalFee
       values['processingFees'] = product.processingFees
+      values['collectionFees'] = product.collectionFees
       values['payFees'] = product.payFees
       return new Promise((resolve, reject) => {
         Sequence.next('invoice', 1).then(seqs => {
