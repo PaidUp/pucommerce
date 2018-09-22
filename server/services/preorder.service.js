@@ -73,7 +73,7 @@ class PreorderService extends CommonService {
                 status: 'active'
               }
               model.save(entity).then(res => {
-                data.status = 'Beneficiary added'
+                data.status = 'Preorder added'
                 data.preOrderId = res._id
                 return next(null, data)
               }).catch(reason => {
