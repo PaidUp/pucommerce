@@ -63,7 +63,7 @@ class PreorderService extends CommonService {
               const entity = {
                 organizationId: product.organizationId,
                 productId: product._id,
-                productName: product.productName,
+                productName: product.name,
                 beneficiaryId,
                 planId: plan._id,
                 season: product.season,
