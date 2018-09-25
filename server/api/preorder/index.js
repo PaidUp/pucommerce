@@ -7,7 +7,6 @@ import multer from 'multer'
 let uploadMemory = multer({ storage: multer.memoryStorage() })
 
 let combinedMemoryMiddleware = (function () {
-  console.log('into combined')
   let chain = connect();
   [auth.validate, uploadMemory.single('file')].forEach(function (middleware) {
     chain.use(middleware)

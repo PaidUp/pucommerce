@@ -7,6 +7,7 @@ import { Parser as Json2csvParser } from 'json2csv'
 import csv from 'fast-csv'
 import ApiService from './api.service'
 import config from '@/config/environment'
+import ZendeskService from './zendesk.service'
 
 const email = new Email(config.email.options)
 let preorderService
@@ -16,8 +17,7 @@ class PreorderService extends CommonService {
     super(new PreorderModel())
   }
 
-  bulkPreorders (buffer, userEmail) {
-    console.log('into met')
+  bulkPreorders (buffer, userEmail, comment) {
     let model = this.model
     let result = []
     let bufferStream = new stream.PassThrough()
@@ -39,25 +39,27 @@ class PreorderService extends CommonService {
           }, {})
           csv.fromStream(bufferStream, {headers: true})
             .transform((data, next) => {
-              const beneficiaryId = data.beneficiaryId.trim()
-              // const beneficiaryFirstName = data.beneficiaryFirstName.trim()
-              // const beneficiaryLastName = data.beneficiaryLastName.trim()
-              const parentEmail = data.parentEmail.trim()
+              const beneficiaryId = data.beneficiaryId
+              const beneficiaryFirstName = data.beneficiaryFirstName
+              const beneficiaryLastName = data.beneficiaryLastName
+              const parentEmail = data.parentEmail
               if (!emailValidator.validate(parentEmail)) {
                 data.status = 'Invalid email'
                 return next(null, data)
               }
-              // const parentFirstName = data.parentFirstName.trim()
-              // const parentLastName = data.parentLastName.trim()
-              const paymentPlanId = data.paymentPlanId.trim()
+              const parentFirstName = data.parentFirstName
+              const parentLastName = data.parentLastName
+              const parentPhoneNumber = data.parentPhoneNumber
+              const zdOrganizationId = data.zdOrganizationId
+              const paymentPlanId = data.paymentPlanId
               const plan = mapPlans[paymentPlanId]
               if (!plan) {
-                data.status = 'plan not exist'
+                data.status = 'Payment plan does not exist'
                 return next(null, data)
               }
               const product = mapProducts[plan.productId]
               if (!product) {
-                data.status = 'product not exist'
+                data.status = 'Product does not exist'
                 return next(null, data)
               }
               const entity = {
@@ -75,7 +77,21 @@ class PreorderService extends CommonService {
               model.save(entity).then(res => {
                 data.status = 'Preorder added'
                 data.preOrderId = res._id
-                return next(null, data)
+                ZendeskService.userCreateOrUpdate({
+                  email: parentEmail,
+                  name: parentFirstName + ' ' + parentLastName,
+                  phone: parentPhoneNumber,
+                  organization: zdOrganizationId,
+                  beneficiary: beneficiaryFirstName + ' ' + beneficiaryLastName,
+                  product: product.name
+                }).then(res => {
+                  data.zendeskParentInsertResult = 'parent added'
+                  return next(null, data)
+                }).catch(reason => {
+                  console.log('reason: ', reason)
+                  data.zendeskParentInsertResult = 'parent failed'
+                  return next(null, data)
+                })
               }).catch(reason => {
                 data.status = reason.toString()
                 return next(null, data)
@@ -85,7 +101,7 @@ class PreorderService extends CommonService {
               result.push(data)
             })
             .on('end', function () {
-              const fields = ['beneficiaryId', 'beneficiaryFirstName', 'beneficiaryLastName', 'parentEmail', 'parentFirstName', 'parentLastName', 'paymentPlanId', 'preOrderId', 'status']
+              const fields = ['beneficiaryId', 'beneficiaryFirstName', 'beneficiaryLastName', 'parentEmail', 'parentFirstName', 'parentLastName', 'paymentPlanId', 'preOrderId', 'status', 'zendeskParentInsertResult']
               const json2csvParser = new Json2csvParser({ fields })
               const csv = json2csvParser.parse(result)
               const attachment = {
