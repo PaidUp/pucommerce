@@ -10,6 +10,7 @@ import config from '@/config/environment'
 import ZendeskService from './zendesk.service'
 
 const email = new Email(config.email.options)
+const cfPreoderId = config.zendesk.customFields.preorderId
 let preorderService
 
 function replaceText (values, text) {
@@ -22,6 +23,17 @@ function replaceText (values, text) {
 class PreorderService extends CommonService {
   constructor () {
     super(new PreorderModel())
+  }
+
+  inactive (id) {
+    return this.model.updateById(id, { status: 'inactive' }).then(preorder => {
+      ZendeskService.search(`type:ticket ${cfPreoderId}:${id}`).then(tickets => {
+        if (tickets && tickets.length) {
+          const ticketId = tickets[0].id
+          ZendeskService.ticketsUpdate(ticketId)
+        }
+      })
+    })
   }
 
   bulkPreorders (buffer, userEmail, comment, subject) {

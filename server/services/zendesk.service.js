@@ -67,4 +67,22 @@ export default class ZendeskService {
       })
     })
   }
+
+  static search (queryStr) {
+    return new Promise((resolve, reject) => {
+      client.search.query(queryStr, (error, data) => {
+        if (error) return reject(error)
+        resolve(data.results)
+      })
+    })
+  }
+
+  static ticketsUpdate (id, values) {
+    return new Promise((resolve, reject) => {
+      client.tickets.update(id, values, (error, data) => {
+        if (error) return reject(error)
+        resolve(data)
+      })
+    })
+  }
 }
