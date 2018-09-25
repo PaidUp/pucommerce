@@ -99,9 +99,11 @@ export default class PreorderCotroller {
   static bulk (req, res) {
     const email = req.user.email
     const comment = req.body.comment
+    const subject = req.body.subject
     if (!req.file) return HR.error(res, 'files is required', 422)
     if (!comment) return HR.error(res, 'Comment is required', 422)
-    preorderService.bulkPreorders(req.file.buffer, email, comment)
+    if (!subject) return HR.error(res, 'Subject is required', 422)
+    preorderService.bulkPreorders(req.file.buffer, email, comment, subject)
     return HR.send(res, {})
   }
 }

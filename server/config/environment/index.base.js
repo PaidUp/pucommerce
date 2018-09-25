@@ -76,6 +76,17 @@ let all = {
     templates: {
       checkout: 'e6be06bd-d125-4dd6-914d-2085f2382441'
     }
+  },
+  zendesk: {
+    username: 'ricardo@getpaidup.com',
+    token: '6ON1frWgVv8acTGZNnabBMjj500JZA8vmGK2rNeb',
+    subdomain: 'getpaidup1478060212',
+    assigneeEmail: 'felipe@getpaidup.com',
+    customFields: {
+      preorderId: '360008982873',
+      ticketReasonCategory: '48042408',
+      balance: '56485848'
+    }
   }
 }
 

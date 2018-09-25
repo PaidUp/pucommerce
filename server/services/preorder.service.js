@@ -12,14 +12,22 @@ import ZendeskService from './zendesk.service'
 const email = new Email(config.email.options)
 let preorderService
 
+function replaceText (values, text) {
+  Object.keys(values).forEach(key => {
+    text = text.replace(new RegExp('{{' + key + '}}'), values[key])
+  })
+  return text
+}
+
 class PreorderService extends CommonService {
   constructor () {
     super(new PreorderModel())
   }
 
-  bulkPreorders (buffer, userEmail, comment) {
+  bulkPreorders (buffer, userEmail, comment, subject) {
     let model = this.model
     let result = []
+    // let header = buffer.toString('utf8').split('\r')[0].split(',')
     let bufferStream = new stream.PassThrough()
     bufferStream.end(buffer)
 
@@ -53,6 +61,10 @@ class PreorderService extends CommonService {
               const zdOrganizationId = data.zdOrganizationId
               const paymentPlanId = data.paymentPlanId
               const plan = mapPlans[paymentPlanId]
+              const cfBalance = plan.dues.reduce((curr, due) => {
+                return curr + due.amount
+              }, 0)
+
               if (!plan) {
                 data.status = 'Payment plan does not exist'
                 return next(null, data)
@@ -62,6 +74,14 @@ class PreorderService extends CommonService {
                 data.status = 'Product does not exist'
                 return next(null, data)
               }
+
+              const ticketStatus = data.ticketStatus
+              const ticketAssignee = data.ticketAssignee
+              const ticketPriority = data.ticketPriority
+              const cfTicketReasonCategory = data.cfTicketReasonCategory
+              const ticketTags = data.ticketTags ? data.ticketTags.split('|') : []
+              const isPublic = data.isPublic
+
               const entity = {
                 organizationId: product.organizationId,
                 productId: product._id,
@@ -86,9 +106,26 @@ class PreorderService extends CommonService {
                   product: product.name
                 }).then(res => {
                   data.zendeskParentInsertResult = 'parent added'
-                  return next(null, data)
+                  ZendeskService.ticketsCreate({
+                    subject: replaceText(data, subject),
+                    comment: replaceText(data, comment),
+                    status: ticketStatus,
+                    requesterEmail: parentEmail,
+                    requesterName: parentFirstName + '' + parentLastName,
+                    ticketAssignee,
+                    ticketPriority,
+                    cfBalance,
+                    cfTicketReasonCategory,
+                    ticketTags,
+                    isPublic
+                  }).then(res => {
+                    data.zendeskTicketResult = 'ticket created'
+                    return next(null, data)
+                  }).catch(reason => {
+                    data.zendeskTicketResult = 'ticket failed'
+                    return next(null, data)
+                  })
                 }).catch(reason => {
-                  console.log('reason: ', reason)
                   data.zendeskParentInsertResult = 'parent failed'
                   return next(null, data)
                 })
@@ -101,7 +138,7 @@ class PreorderService extends CommonService {
               result.push(data)
             })
             .on('end', function () {
-              const fields = ['beneficiaryId', 'beneficiaryFirstName', 'beneficiaryLastName', 'parentEmail', 'parentFirstName', 'parentLastName', 'paymentPlanId', 'preOrderId', 'status', 'zendeskParentInsertResult']
+              const fields = ['beneficiaryId', 'beneficiaryFirstName', 'beneficiaryLastName', 'parentEmail', 'parentFirstName', 'parentLastName', 'paymentPlanId', 'preOrderId', 'status', 'zendeskParentInsertResult', 'zendeskTicketResult']
               const json2csvParser = new Json2csvParser({ fields })
               const csv = json2csvParser.parse(result)
               const attachment = {
