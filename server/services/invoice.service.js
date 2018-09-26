@@ -7,6 +7,7 @@ import numeral from 'numeral'
 import { Sequence, Email } from 'pu-common'
 import config from '@/config/environment'
 import { productPriceV2 } from 'machinepack-calculations'
+import preorderService from './preorder.service'
 const email = new Email(config.email.options)
 
 let invoiceService
@@ -228,6 +229,21 @@ class InvoiceService extends CommonService {
               productName: invoices[0].productName,
               invoices: buildTableInvoices(invoices)
             })
+            if (order.preorderId) {
+              preorderService.inactive(order.preorderId, 'Payment was authorized')
+            } else {
+              preorderService.find({
+                beneficiaryId: order.beneficiaryId,
+                productId: order.productId
+              })
+                .then(preorders => {
+                  if (preorders && preorders.length) {
+                    let preorder = preorders[0]
+                    preorderService.inactive(preorder._id, 'Has authorized payments but they have chosen a different plan than was assigned')
+                  }
+                }).catch(reason => {
+                })
+            }
           })
         }).catch(reason => reject(reason))
     })

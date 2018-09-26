@@ -10,7 +10,6 @@ import config from '@/config/environment'
 import ZendeskService from './zendesk.service'
 
 const email = new Email(config.email.options)
-const cfPreoderId = config.zendesk.customFields.preorderId
 let preorderService
 
 function replaceText (values, text) {
@@ -25,13 +24,22 @@ class PreorderService extends CommonService {
     super(new PreorderModel())
   }
 
-  inactive (id) {
+  inactive (id, message) {
     return this.model.updateById(id, { status: 'inactive' }).then(preorder => {
-      ZendeskService.search(`type:ticket ${cfPreoderId}:${id}`).then(tickets => {
+      const query = (`type:ticket fieldvalue:${id}`)
+      ZendeskService.search(query).then(tickets => {
         if (tickets && tickets.length) {
           const ticketId = tickets[0].id
-          ZendeskService.ticketsUpdate(ticketId)
+          ZendeskService.ticketsUpdate(ticketId, {
+            ticket: {
+              status: 'open',
+              comment: {body: message, public: false},
+              tags: 'ordercreated'
+            }
+          })
         }
+      }).catch(reason => {
+        console.log('err: ', reason.result.toString('utf8'))
       })
     })
   }
@@ -106,9 +114,9 @@ class PreorderService extends CommonService {
                 assigneeEmail: parentEmail,
                 status: 'active'
               }
-              model.save(entity).then(res => {
+              model.save(entity).then(po => {
                 data.status = 'Preorder added'
-                data.preOrderId = res._id
+                data.preOrderId = po._id
                 ZendeskService.userCreateOrUpdate({
                   email: parentEmail,
                   name: parentFirstName + ' ' + parentLastName,
@@ -119,6 +127,7 @@ class PreorderService extends CommonService {
                 }).then(res => {
                   data.zendeskParentInsertResult = 'parent added'
                   ZendeskService.ticketsCreate({
+                    preorderId: po._id,
                     subject: replaceText(data, subject),
                     comment: replaceText(data, comment),
                     status: ticketStatus,

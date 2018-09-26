@@ -8,6 +8,7 @@ const client = zendesk.createClient({
 })
 const cfTicketReasonCategoryId = config.zendesk.customFields.ticketReasonCategory
 const cfBalanceId = config.zendesk.customFields.balance
+const cfPreoderId = config.zendesk.customFields.preorderId
 
 export default class ZendeskService {
   static userCreateOrUpdate ({email, name, phone, organization, beneficiary, product}) {
@@ -34,9 +35,9 @@ export default class ZendeskService {
     })
   }
 
-  static ticketsCreate ({subject, comment, status, requesterEmail, requesterName, ticketAssignee, ticketPriority, cfBalance, cfTicketReasonCategory, ticketTags, isPublic}) {
+  static ticketsCreate ({preorderId, subject, comment, status, requesterEmail, requesterName, ticketAssignee, ticketPriority, cfBalance, cfTicketReasonCategory, ticketTags, isPublic}) {
     return new Promise((resolve, reject) => {
-      let customFields = []
+      let customFields = [{id: cfPreoderId, value: preorderId}]
       if (cfBalance) {
         customFields.push({id: cfBalanceId, value: cfBalance})
       }
@@ -61,18 +62,18 @@ export default class ZendeskService {
           isPublic: (isPublic && isPublic.toLowerCase() === 'true'),
           custom_fields: customFields
         }
-      }, (error, response) => {
+      }, (error, req, result) => {
         if (error) return reject(error)
-        resolve(response)
+        resolve(result)
       })
     })
   }
 
   static search (queryStr) {
     return new Promise((resolve, reject) => {
-      client.search.query(queryStr, (error, data) => {
+      client.search.query(queryStr, (error, req, results) => {
         if (error) return reject(error)
-        resolve(data.results)
+        resolve(results)
       })
     })
   }
