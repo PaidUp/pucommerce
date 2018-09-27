@@ -23,6 +23,7 @@ const schema = {
   season: { type: String },
   beneficiaryId: { type: String, required: true },
   planId: { type: String },
+  planGroupId: { type: String },
   assigneeEmail: { type: String, required: true },
   dues: { type: [dues] },
   credits: { type: [credits] },

@@ -67,6 +67,7 @@ class PreorderService extends CommonService {
           }, {})
           csv.fromStream(bufferStream, {headers: true})
             .transform((data, next) => {
+              const organizationName = data.organization
               const beneficiaryId = data.beneficiaryId
               const beneficiaryFirstName = data.beneficiaryFirstName
               const beneficiaryLastName = data.beneficiaryLastName
@@ -78,17 +79,16 @@ class PreorderService extends CommonService {
               const parentFirstName = data.parentFirstName
               const parentLastName = data.parentLastName
               const parentPhoneNumber = data.parentPhoneNumber
-              const zdOrganizationId = data.zdOrganizationId
               const paymentPlanId = data.paymentPlanId
               const plan = mapPlans[paymentPlanId]
-              const cfBalance = plan.dues.reduce((curr, due) => {
-                return curr + due.amount
-              }, 0)
 
               if (!plan) {
                 data.status = 'Payment plan does not exist'
                 return next(null, data)
               }
+              const cfBalance = plan.dues.reduce((curr, due) => {
+                return curr + due.amount
+              }, 0)
               const product = mapProducts[plan.productId]
               if (!product) {
                 data.status = 'Product does not exist'
@@ -108,6 +108,7 @@ class PreorderService extends CommonService {
                 productName: product.name,
                 beneficiaryId,
                 planId: plan._id,
+                planGroupId: plan.groupId,
                 season: product.season,
                 credits: plan.credits,
                 dues: plan.dues,
@@ -121,7 +122,7 @@ class PreorderService extends CommonService {
                   email: parentEmail,
                   name: parentFirstName + ' ' + parentLastName,
                   phone: parentPhoneNumber,
-                  organization: zdOrganizationId,
+                  organization: { name: organizationName },
                   beneficiary: beneficiaryFirstName + ' ' + beneficiaryLastName,
                   product: product.name
                 }).then(res => {

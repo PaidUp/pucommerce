@@ -8,6 +8,7 @@ import { Sequence, Email } from 'pu-common'
 import config from '@/config/environment'
 import { productPriceV2 } from 'machinepack-calculations'
 import preorderService from './preorder.service'
+import ZendeskService from './zendesk.service'
 const email = new Email(config.email.options)
 
 let invoiceService
@@ -239,7 +240,26 @@ class InvoiceService extends CommonService {
                 .then(preorders => {
                   if (preorders && preorders.length) {
                     let preorder = preorders[0]
-                    preorderService.inactive(preorder._id, 'Has authorized payments but they have chosen a different plan than was assigned')
+                    if (order.planGroupId && order.planGroupId === preorder.planGroupId) {
+                      preorderService.inactive(preorder._id, 'Payment was authorized, groupId: ' + order.planGroupId)
+                    } else {
+                      const query = (`type:ticket fieldvalue:${preorder._id}`)
+                      console.log('query: ', query)
+                      ZendeskService.search(query).then(tickets => {
+                        if (tickets && tickets.length) {
+                          const ticketId = tickets[0].id
+                          ZendeskService.ticketsUpdate(ticketId, {
+                            ticket: {
+                              status: 'open',
+                              comment: {body: 'Has authorized payments but they have chosen a different plan than was assigned', public: false},
+                              tags: 'ordercreated'
+                            }
+                          })
+                        }
+                      }).catch(reason => {
+                        console.log('err: ', reason.result.toString('utf8'))
+                      })
+                    }
                   }
                 }).catch(reason => {
                 })

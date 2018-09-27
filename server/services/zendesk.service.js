@@ -25,12 +25,15 @@ export default class ZendeskService {
           email,
           name,
           phone,
-          organization_id: organization,
+          organization,
           user_fields: userFields
         }
-      }, (error, response) => {
+      }, (error, response, result) => {
+        console.log('error: ', error)
+        console.log('response: ', response)
+        console.log('result: ', result)
         if (error) return reject(error)
-        resolve(response)
+        resolve(result)
       })
     })
   }
