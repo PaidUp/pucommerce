@@ -235,34 +235,37 @@ class InvoiceService extends CommonService {
             } else {
               preorderService.find({
                 beneficiaryId: order.beneficiaryId,
-                productId: order.productId
-              })
-                .then(preorders => {
-                  if (preorders && preorders.length) {
-                    let preorder = preorders[0]
-                    if (order.planGroupId && order.planGroupId === preorder.planGroupId) {
-                      preorderService.inactive(preorder._id, 'Payment was authorized, groupId: ' + order.planGroupId)
-                    } else {
-                      const query = (`type:ticket fieldvalue:${preorder._id}`)
-                      console.log('query: ', query)
-                      ZendeskService.search(query).then(tickets => {
-                        if (tickets && tickets.length) {
-                          const ticketId = tickets[0].id
-                          ZendeskService.ticketsUpdate(ticketId, {
-                            ticket: {
-                              status: 'open',
-                              comment: {body: 'Has authorized payments but they have chosen a different plan than was assigned', public: false},
-                              tags: 'ordercreated'
-                            }
-                          })
-                        }
-                      }).catch(reason => {
-                        console.log('err: ', reason.result.toString('utf8'))
-                      })
-                    }
+                productId: order.productId,
+                status: 'active'
+              }).then(preorders => {
+                if (preorders && preorders.length) {
+                  let preorder = preorders[0]
+                  if (order.planGroupId && order.planGroupId === preorder.planGroupId) {
+                    preorderService.inactive(preorder._id, 'Payment was authorized, groupId: ' + order.planGroupId)
+                  } else {
+                    const query = (`type:ticket fieldvalue:${preorder._id}`)
+                    ZendeskService.search(query).then(tickets => {
+                      if (tickets && tickets.length) {
+                        let ticket = tickets[0]
+                        let tags = ticket.tags.filter(tag => {
+                          return tag !== 'signupautomation'
+                        })
+                        tags.push('ordercreated')
+                        ZendeskService.ticketsUpdate(ticket.id, {
+                          ticket: {
+                            status: 'open',
+                            comment: {body: 'Payments authorized but parent has authorized different plan than was assigned. Please double check to make sure they chose the correct plan and if so, deactivate the plan. If not, please reconcile the account and address the issue with the parent.', public: false},
+                            tags
+                          }
+                        })
+                      }
+                    }).catch(reason => {
+                      console.log('err: ', reason.result.toString('utf8'))
+                    })
                   }
-                }).catch(reason => {
-                })
+                }
+              }).catch(reason => {
+              })
             }
           })
         }).catch(reason => reject(reason))

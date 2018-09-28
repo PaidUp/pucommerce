@@ -29,12 +29,16 @@ class PreorderService extends CommonService {
       const query = (`type:ticket fieldvalue:${id}`)
       ZendeskService.search(query).then(tickets => {
         if (tickets && tickets.length) {
-          const ticketId = tickets[0].id
-          ZendeskService.ticketsUpdate(ticketId, {
+          let ticket = tickets[0]
+          let tags = ticket.tags.filter(tag => {
+            return tag !== 'signupautomation'
+          })
+          tags.push('ordercreated')
+          ZendeskService.ticketsUpdate(ticket.id, {
             ticket: {
               status: 'open',
               comment: {body: message, public: false},
-              tags: 'ordercreated'
+              tags
             }
           })
         }

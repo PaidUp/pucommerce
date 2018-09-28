@@ -29,9 +29,6 @@ export default class ZendeskService {
           user_fields: userFields
         }
       }, (error, response, result) => {
-        console.log('error: ', error)
-        console.log('response: ', response)
-        console.log('result: ', result)
         if (error) return reject(error)
         resolve(result)
       })
