@@ -42,6 +42,7 @@ const collectionFees = {
 
 const schema = {
   invoiceId: { type: String, required: true },
+  idempotencyKey: { type: String },
   label: { type: String, required: true },
 
   organizationId: { type: String, required: true },

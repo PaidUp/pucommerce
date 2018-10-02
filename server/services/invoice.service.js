@@ -9,6 +9,7 @@ import config from '@/config/environment'
 import { productPriceV2 } from 'machinepack-calculations'
 import preorderService from './preorder.service'
 import ZendeskService from './zendesk.service'
+import randomstring from 'randomstring'
 const email = new Email(config.email.options)
 
 let invoiceService
@@ -283,6 +284,7 @@ class InvoiceService extends CommonService {
   update (id, values) {
     return this.getById(id).then(invoice => {
       let calculation = Calculations.exec(invoice, values.paymentDetails.paymentMethodtype, invoice.priceBase)
+      values.idempotencyKey = randomstring.generate(5)
       values.price = calculation.price
       values.paidupFee = calculation.paidupFee
       values.stripeFee = calculation.processingFee
@@ -292,10 +294,10 @@ class InvoiceService extends CommonService {
   }
 
   updateInvoice (id, values, product) {
+    values['idempotencyKey'] = randomstring.generate(5)
     const model = this.model
     if (values.unbundle) {
       let calculation = Calculations.exec(product, values.paymentDetails.paymentMethodtype, values.priceBase)
-      console.log('calculation: ', calculation)
       let dateCharge = new Date(values.dateCharge)
       dateCharge.setUTCHours(16)
       values['dateCharge'] = dateCharge
