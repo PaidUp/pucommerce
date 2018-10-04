@@ -4,12 +4,13 @@ import Calculations from './calculations'
 import axios from 'axios'
 import moment from 'moment'
 import numeral from 'numeral'
-import { Sequence, Email } from 'pu-common'
+import { Sequence, Email, Logger } from 'pu-common'
 import config from '@/config/environment'
 import { productPriceV2 } from 'machinepack-calculations'
 import preorderService from './preorder.service'
 import ZendeskService from './zendesk.service'
 import randomstring from 'randomstring'
+
 const email = new Email(config.email.options)
 
 let invoiceService
@@ -218,6 +219,7 @@ class InvoiceService extends CommonService {
   }
 
   checkout ({order, dues, product, user}) {
+    Logger.info('checkout: ' + JSON.stringify(order))
     return new Promise((resolve, reject) => {
       apiUser.get(`/id/${user._id}`)
         .then(response => {
@@ -237,13 +239,22 @@ class InvoiceService extends CommonService {
               preorderService.find({
                 beneficiaryId: order.beneficiaryId,
                 productId: order.productId,
+                // planGroupId: order.planGroupId,
+                season: order.season,
+                assigneeEmail: user.email,
                 status: 'active'
               }).then(preorders => {
                 if (preorders && preorders.length) {
-                  let preorder = preorders[0]
-                  if (order.planGroupId && order.planGroupId === preorder.planGroupId) {
+                  let preorder = preorders.reduce((curr, po) => {
+                    if (order.planGroupId === po.planGroupId) {
+                      curr = po
+                    }
+                    return curr
+                  }, null)
+                  if (preorder) {
                     preorderService.inactive(preorder._id, 'Payment was authorized, groupId: ' + order.planGroupId)
                   } else {
+                    preorder = preorders[0]
                     const query = (`type:ticket fieldvalue:${preorder._id}`)
                     ZendeskService.search(query).then(tickets => {
                       if (tickets && tickets.length) {
@@ -258,10 +269,14 @@ class InvoiceService extends CommonService {
                             comment: {body: 'Payments authorized but parent has authorized different plan than was assigned. Please double check to make sure they chose the correct plan and if so, deactivate the plan. If not, please reconcile the account and address the issue with the parent.', public: false},
                             tags
                           }
+                        }).then(() => {
+                          Logger.info('Ticket updated: ' + ticket.id)
+                        }).catch(reason => {
+                          Logger.critical('ZendeskService.ticketsUpdate id: ' + ticket.id + ' - ' + reason.result.toString('utf8'))
                         })
                       }
                     }).catch(reason => {
-                      console.log('err: ', reason.result.toString('utf8'))
+                      Logger.critical('ZendeskService.search query: ' + query + ' - ' + reason.result.toString('utf8'))
                     })
                   }
                 }
