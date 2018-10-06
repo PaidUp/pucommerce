@@ -17,15 +17,21 @@ export default function (app) {
   app.use(cors())
   app.use(compression())
   app.use(bodyParser.urlencoded({ extended: false }))
-  // app.use(bodyParser.raw({type: '*/*'}))
-  // app.use((req, res, next) => {
-  //   req.rawBody = req.body
-  //   if (Object.keys(req.rawBody).length > 0) {
-  //     req.body = JSON.parse(req.rawBody.toString())
-  //   }
-  //   next()
-  // })
-  app.use(bodyParser.json())
+  app.use(bodyParser.raw({
+    type: (req) => {
+      let contentType = req.headers['content-type']
+      return contentType && contentType.includes('application/json')
+    }
+  }))
+  app.use((req, res, next) => {
+    let contentType = req.headers['content-type']
+    if (contentType && contentType.includes('application/json')) {
+      req.rawBody = req.body
+      req.body = JSON.parse(req.rawBody.toString())
+    }
+    next()
+  })
+  // app.use(bodyParser.json())
   app.use(methodOverride())
   app.use(cookieParser())
   app.use(pmx.expressErrorHandler())
