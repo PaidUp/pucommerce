@@ -4,19 +4,7 @@ import Stripe from 'stripe'
 import config from '@/config/environment'
 const stripe = Stripe(config.stripe.key)
 
-export default class OrganizationCotroller {
-  static checkout (req, res) {
-    let { order, dues, product, user = req.user } = req.body
-    if (!order) return HR.error(res, 'order is required', 422)
-    if (!dues) return HR.error(res, 'dues is required', 422)
-    if (!product) return HR.error(res, 'product is required', 422)
-    invoiceService.checkout({order, dues, product, user})
-      .then(order => HR.send(res, order))
-      .catch(reason => {
-        HR.error(res, reason)
-      })
-  }
-
+export default class InvoiceCotroller {
   static webhook (req, res) {
     const signature = req.headers['stripe-signature']
     let event = stripe.webhooks.constructEvent(req.rawBody, signature, config.stripe.webhook)

@@ -3,7 +3,6 @@ import { CreditController } from '@/controllers'
 import { auth } from 'pu-common'
 
 const router = express.Router()
-router.post('/checkout', auth.validate, CreditController.checkout)
 router.post('/', auth.validate, CreditController.addCreditMeno)
 router.put('/', auth.validate, CreditController.update)
 router.delete('/:id', auth.validate, CreditController.delete)

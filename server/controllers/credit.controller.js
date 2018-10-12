@@ -1,7 +1,7 @@
 import { creditService } from '@/services'
 import { HandlerResponse as HR } from 'pu-common'
 
-export default class OrganizationCotroller {
+export default class CreditCotroller {
   static addCreditMeno (req, res) {
     let { label, description, price, beneficiaryId, assigneeEmail, productId, productName, organizationId, season, status, dateCharge } = req.body
     if (!label) return HR.error(res, 'label is required', 422)
@@ -68,18 +68,5 @@ export default class OrganizationCotroller {
     creditService.find(values)
       .then(cMemo => HR.send(res, cMemo))
       .catch(reason => HR.error(res, reason))
-  }
-
-  static checkout (req, res) {
-    let { order, credits, user = req.user } = req.body
-    if (!order) return HR.error(res, 'order is required', 422)
-    if (!credits) return HR.error(res, 'credits is required', 422)
-    creditService.checkout(order, credits, user)
-      .then(values => {
-        HR.send(res, values)
-      })
-      .catch(reason => {
-        HR.error(res, reason)
-      })
   }
 }

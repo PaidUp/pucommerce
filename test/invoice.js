@@ -9,7 +9,7 @@ it('POST# /checkout create invoices', done => {
   let params = common.request.checkout
   chai
     .request(server)
-    .post('/api/v1/commerce/invoice/checkout')
+    .post('/api/v1/commerce/checkout')
     .set('authorization', token())
     .send(params)
     .end((err, res) => {

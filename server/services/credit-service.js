@@ -37,9 +37,13 @@ class CreditService extends CommonService {
 
   checkout (order, credits, user) {
     return new Promise((resolve, reject) => {
-      generateCredits(order, credits, user).then(crds => {
-        this.insertMany(crds).then(result => resolve(result))
-      }).catch(reason => reject(reason))
+      if (credits && credits.length) {
+        generateCredits(order, credits, user).then(crds => {
+          this.insertMany(crds).then(result => resolve(result))
+        }).catch(reason => reject(reason))
+      } else {
+        resolve([])
+      }
     })
   }
 
