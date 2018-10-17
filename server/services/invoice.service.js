@@ -429,6 +429,19 @@ class InvoiceService extends CommonService {
       )
     })
   }
+
+  search (criteria) {
+    return this.model.find({
+      $or: [
+        {invoiceId: new RegExp('^' + criteria + '$', 'i')},
+        {beneficiaryFirstName: new RegExp(criteria, 'i')},
+        {beneficiaryLastName: new RegExp(criteria, 'i')},
+        {'user.userFirstName': new RegExp(criteria, 'i')},
+        {'user.userLastName': new RegExp(criteria, 'i')},
+        {'user.userEmail': new RegExp('^' + criteria + '$', 'i')}
+      ]
+    })
+  }
 }
 
 invoiceService = new InvoiceService()

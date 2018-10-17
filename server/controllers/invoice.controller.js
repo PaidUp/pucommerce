@@ -137,4 +137,12 @@ export default class InvoiceCotroller {
       .then(results => HR.send(res, results))
       .catch(reason => HR.error(res, reason))
   }
+
+  static search (req, res) {
+    if (!req.query.criteria) return HR.error(res, 'Criteria is required', 422)
+    const criteria = req.query.criteria
+    invoiceService.search(criteria)
+      .then(users => HR.send(res, users))
+      .catch(reason => HR.error(res, reason))
+  }
 }
