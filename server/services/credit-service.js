@@ -16,7 +16,7 @@ function generateCredits (order, credits, user) {
         description: credit.description,
         price: credit.amount,
         beneficiaryId: order.beneficiaryId,
-        assigneeEmail: user.email,
+        assigneeEmail: user.email.toLowerCase(),
         productId: order.productId,
         productName: order.productName,
         organizationId: order.organizationId,

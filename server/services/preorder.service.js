@@ -80,7 +80,7 @@ class PreorderService extends CommonService {
               const beneficiaryId = data.beneficiaryId
               const beneficiaryFirstName = data.beneficiaryFirstName
               const beneficiaryLastName = data.beneficiaryLastName
-              const parentEmail = data.parentEmail
+              const parentEmail = data.parentEmail.toLowerCase()
               if (!emailValidator.validate(parentEmail)) {
                 data.status = 'Invalid email'
                 return next(null, data)

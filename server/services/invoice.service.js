@@ -241,7 +241,7 @@ class InvoiceService extends CommonService {
                 productId: order.productId,
                 // planGroupId: order.planGroupId,
                 season: order.season,
-                assigneeEmail: user.email,
+                assigneeEmail: new RegExp('^' + user.email + '$', 'i'),
                 status: 'active'
               }).then(preorders => {
                 if (preorders && preorders.length) {

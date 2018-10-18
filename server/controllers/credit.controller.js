@@ -16,6 +16,7 @@ export default class CreditCotroller {
     if (!status) return HR.error(res, 'status is required', 422)
     if (!dateCharge) return HR.error(res, 'dateCharge is required', 422)
     req.body.createOn = new Date(dateCharge)
+    req.body.assigneeEmail = req.body.assigneeEmail.toLowerCase()
 
     creditService.add(req.body)
       .then(cMemo => HR.send(res, cMemo))
@@ -30,6 +31,7 @@ export default class CreditCotroller {
     if (!values.assigneeEmail) return HR.error(res, 'assigneeEmail is required', 422)
     if (!values.status) return HR.error(res, 'status is required', 422)
     if (!values.dateCharge) return HR.error(res, 'dateCharge is required', 422)
+    values.assigneeEmail = values.assigneeEmail.toLowerCase()
     values.createOn = new Date(values.dateCharge)
     creditService.updateById(id, values)
       .then(data => HR.send(res, data))
@@ -49,7 +51,7 @@ export default class CreditCotroller {
       beneficiaryId: req.params.beneficiaryId
     }
     const assignee = req.query.assegnee
-    if (assignee) params['assigneeEmail'] = assignee
+    if (assignee) params['assigneeEmail'] = new RegExp('^' + assignee + '$', 'i')
     creditService.find(params)
       .then(cMemo => HR.send(res, cMemo))
       .catch(reason => HR.error(res, reason))

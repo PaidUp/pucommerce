@@ -4,3 +4,4 @@ node_modules
 dist/
 .idea
 server/config/environment/index.js
+.DS_Store
