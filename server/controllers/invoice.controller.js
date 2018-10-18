@@ -117,7 +117,7 @@ export default class InvoiceCotroller {
       beneficiaryId: req.params.beneficiaryId
     }
     const assignee = req.query.assegnee
-    if (assignee) params['user.userEmail'] = assignee
+    if (assignee) params['user.userEmail'] = new RegExp('^' + assignee + '$', 'i')
     invoiceService.find(params)
       .then(results => HR.send(res, results))
       .catch(reason => HR.error(res, reason))
@@ -135,14 +135,6 @@ export default class InvoiceCotroller {
     if (beneficiaryId) values.beneficiaryId = beneficiaryId
     invoiceService.find(values)
       .then(results => HR.send(res, results))
-      .catch(reason => HR.error(res, reason))
-  }
-
-  static search (req, res) {
-    if (!req.query.criteria) return HR.error(res, 'Criteria is required', 422)
-    const criteria = req.query.criteria
-    invoiceService.search(criteria)
-      .then(users => HR.send(res, users))
       .catch(reason => HR.error(res, reason))
   }
 }

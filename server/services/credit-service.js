@@ -53,6 +53,15 @@ class CreditService extends CommonService {
       return this.save(params)
     })
   }
+
+  search (criteria) {
+    return this.model.find({
+      $or: [
+        {memoId: new RegExp('^' + criteria + '$', 'i')},
+        {assigneeEmail: new RegExp('^' + criteria + '$', 'i')}
+      ]
+    })
+  }
 }
 
 creditService = new CreditService()

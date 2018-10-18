@@ -186,6 +186,14 @@ class PreorderService extends CommonService {
       }
     })
   }
+
+  search (criteria) {
+    return this.model.find({
+      $or: [
+        {assigneeEmail: new RegExp('^' + criteria + '$', 'i')}
+      ]
+    })
+  }
 }
 
 preorderService = new PreorderService()
