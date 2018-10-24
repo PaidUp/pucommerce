@@ -22,6 +22,15 @@ export default class CommonService {
     return this.model.updateById(id, values).then(entity => entity)
   }
 
+  updateMany (conditions, values) {
+    if (values.dateCharge) {
+      let tmpDate = new Date(values.dateCharge)
+      tmpDate.setUTCHours(16)
+      values.dateCharge = tmpDate
+    }
+    return this.model.updateMany(conditions, {$set: values}).then(entities => entities)
+  }
+
   getById (entityId) {
     return this.model.findById(entityId).then(entity => entity)
   }

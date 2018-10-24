@@ -46,6 +46,20 @@ export default class PreorderCotroller {
       })
   }
 
+  static updateMany (req, res) {
+    let { conditions, values } = req.body
+
+    if (!conditions) return HR.error(res, 'conditions is required', 422)
+    if (!values) return HR.error(res, 'values is required', 422)
+
+    preorderService.updateMany(conditions, values)
+      .then(preorders => {
+        return HR.send(res, preorders)
+      }).catch(reason => {
+        return HR.error(res, reason)
+      })
+  }
+
   static import (req, res) {
     let message = validateRequired(req.body)
 

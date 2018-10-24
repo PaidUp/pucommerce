@@ -18,8 +18,9 @@ const router = express.Router()
 router.get('/beneficiary/:beneficiaryId', auth.validate, PreorderController.getByBeneficiary)
 router.get('/organization/:organizationId', auth.validate, PreorderController.getByOrganization)
 router.post('/bulk', combinedMemoryMiddleware, PreorderController.bulk)
-router.put('/', auth.validate, PreorderController.update)
 router.post('/', auth.validate, PreorderController.save)
 router.post('/import', auth.validate, PreorderController.import)
+router.put('/', auth.validate, PreorderController.update)
+router.put('/many', auth.validate, PreorderController.updateMany)
 
 export default router

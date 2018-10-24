@@ -73,6 +73,20 @@ export default class CommonModel {
     })
   }
 
+  updateMany (conditions, values) {
+    values['$inc'] = {__v: 1}
+    return new Promise((resolve, reject) => {
+      try {
+        this.Model.updateMany(conditions, values, (err, data) => {
+          if (err) return reject(err)
+          resolve(data)
+        })
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }
+
   findById (_id) {
     return this.Model.findById(_id).exec()
   }
