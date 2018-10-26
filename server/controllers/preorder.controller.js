@@ -20,7 +20,7 @@ function validateRequired (params) {
 export default class PreorderCotroller {
   static save (req, res) {
     let message = validateRequired([req.body])
-
+    req.body.assigneeEmail = req.body.assigneeEmail.toLowerCase()
     if (message.length) {
       return HR.error(res, message.join(', '), 422)
     }
