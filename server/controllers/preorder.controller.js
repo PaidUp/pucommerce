@@ -3,8 +3,8 @@ import { HandlerResponse as HR } from 'pu-common'
 
 function validateRequired (params) {
   let requireds = params.map(param => {
-    let { organizationId, organizationName, beneficiaryId, beneficiaryFirstName, beneficiaryLastName, assigneeEmail } = param
-    return { organizationId, organizationName, beneficiaryId, beneficiaryFirstName, beneficiaryLastName, assigneeEmail }
+    let { organizationId, beneficiaryId, assigneeEmail } = param
+    return { organizationId, beneficiaryId, assigneeEmail }
   })
   let messages = []
   requireds.forEach((row, idx) => {
@@ -108,16 +108,5 @@ export default class PreorderCotroller {
       }).catch(reason => {
         return HR.error(res, reason)
       })
-  }
-
-  static bulk (req, res) {
-    const email = req.user.email
-    const comment = req.body.comment
-    const subject = req.body.subject
-    if (!req.file) return HR.error(res, 'files is required', 422)
-    if (!comment) return HR.error(res, 'Comment is required', 422)
-    if (!subject) return HR.error(res, 'Subject is required', 422)
-    preorderService.bulkPreorders(req.file.buffer, email, comment, subject)
-    return HR.send(res, {})
   }
 }
