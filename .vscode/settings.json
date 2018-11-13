@@ -55,5 +55,6 @@
     "editor.tabSize": 2,
     "terminal.integrated.shell.linux": "/bin/zsh",
     "terminal.integrated.shell.osx": "/bin/zsh",
-    "terminal.integrated.fontFamily": "Source Code Pro for Powerline"
+    "terminal.integrated.fontFamily": "ShureTechMono Nerd Font Mono",
+    "terminal.integrated.fontSize": 13
 }

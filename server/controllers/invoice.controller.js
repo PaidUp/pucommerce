@@ -111,6 +111,16 @@ export default class InvoiceCotroller {
       .catch(reason => HR.error(res, reason))
   }
 
+  static getByInvoiceIds (req, res) {
+    const invoiceIds = req.body.invoiceIds
+    if (!invoiceIds) return HR.error(res, 'invoiceIds is required', 422)
+    invoiceService.find({'invoiceId': {
+      $in: invoiceIds
+    }})
+      .then(results => HR.send(res, results))
+      .catch(reason => HR.error(res, reason))
+  }
+
   static getInvoicesByBeneficiary (req, res) {
     if (!req.params.beneficiaryId) return HR.error(res, 'beneficiaryId is required', 422)
     let params = {
