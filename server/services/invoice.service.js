@@ -279,6 +279,33 @@ class InvoiceService extends CommonService {
                       Logger.critical('ZendeskService.search query: ' + query + ' - ' + reason.result.toString('utf8'))
                     })
                   }
+                } else {
+                  const query = (`type:ticket requester:${invoices[0].user.userEmail}`)
+                  ZendeskService.search(query).then(tickets => {
+                    const ticketsFiltered = tickets.filter(tk => {
+                      return tk.status === 'pending'
+                    })
+                    if (ticketsFiltered && ticketsFiltered.length) {
+                      let ticket = ticketsFiltered[0]
+                      let tags = ticket.tags.filter(tag => {
+                        return tag !== 'signupautomation'
+                      })
+                      tags.push('ordercreated')
+                      ZendeskService.ticketsUpdate(ticket.id, {
+                        ticket: {
+                          status: 'open',
+                          comment: {body: 'Payment was authorized.', public: false},
+                          tags
+                        }
+                      }).then(() => {
+                        Logger.info('Ticket updated: ' + ticket.id)
+                      }).catch(reason => {
+                        Logger.critical('ZendeskService.ticketsUpdate id: ' + ticket.id + ' - ' + reason.result.toString('utf8'))
+                      })
+                    }
+                  }).catch(reason => {
+                    Logger.critical('ZendeskService.search query: ' + query + ' - ' + reason.result.toString('utf8'))
+                  })
                 }
               }).catch(reason => {
               })
