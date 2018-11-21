@@ -164,20 +164,11 @@ function generateInvoices (order, dues, product, user) {
       organization = response.data
       return Sequence.next('invoice', dues.length)
     }).then(seqs => {
-      let counter = 0
       for (let idx = 0; idx < dues.length; idx++) {
         let due = dues[idx]
         let dateCharge = new Date(due.dateCharge)
         dateCharge.setUTCHours(16)
         due.dateCharge = dateCharge
-        if (due.account.object === 'bank_account') {
-          let today = new Date().setUTCHours(16)
-          let dc = due.dateCharge.getTime()
-          if (dc <= today) {
-            due.dateCharge = new Date(today + (counter * 300000))
-            counter++
-          }
-        }
         calcPromises.push(calculations(product, due, order, organization, user, seqs.ids[idx]))
       }
       Promise.all(calcPromises).then(values => {
