@@ -135,8 +135,6 @@ chai.use(chaiHttp)
 exports.chai = chai
 exports.server = server
 exports.should = should
-exports.token = function () {
-  return token
-}
+exports.token = () => { return token }
 exports.results = results
 exports.request = request
