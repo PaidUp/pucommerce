@@ -11,21 +11,16 @@ const cfBalanceId = config.zendesk.customFields.balance
 const cfPreoderId = config.zendesk.customFields.preorderId
 
 export default class ZendeskService {
-  static userCreateOrUpdate ({email, name, phone, organization, beneficiary, product}) {
+  static userAddProduct ({email, product, beneficiary}) {
     let userFields = {
-      paidup_customer: 'paidupcustomer',
       athlete_name: beneficiary,
-      products: product,
-      user_type: 'user_type_paidup_customer'
+      products: product
     }
     return new Promise((resolve, reject) => {
       client.users.createOrUpdate({
         user: {
           role: 'end-user',
           email,
-          name,
-          phone,
-          organization,
           user_fields: userFields
         }
       }, (error, response, result) => {

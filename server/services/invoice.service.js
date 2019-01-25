@@ -224,6 +224,11 @@ class InvoiceService extends CommonService {
               productName: invoices[0].productName,
               invoices: buildTableInvoices(invoices)
             })
+            ZendeskService.userAddProduct({
+              email: user.email,
+              product: order.productName,
+              beneficiary: `${order.beneficiaryFirstName} ${order.beneficiaryLastName}`
+            })
             if (order.preorderId) {
               preorderService.inactive(order.preorderId, 'Payment was authorized')
             } else {
