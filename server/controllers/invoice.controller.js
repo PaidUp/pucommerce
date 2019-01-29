@@ -32,10 +32,12 @@ export default class InvoiceCotroller {
     }
   }
 
-  static update (req, res) {
+  static async update (req, res) {
     let { id, values } = req.body
     if (!id) return HR.error(res, 'id is required', 422)
     if (!values) return HR.error(res, 'values is required', 422)
+    const inv = await invoiceService.getById(id)
+    if (inv.status === 'paidup' || inv.status === 'submitted') return HR.error(res, `Invoice ${inv.invoiceId} was charged previously`, 422)
     if (values.unbundle) {
       return invoiceService.update(id, values)
         .then(invoice => {
@@ -63,11 +65,22 @@ export default class InvoiceCotroller {
       })
   }
 
-  static updateCalculations (req, res) {
+  static async updateCalculations (req, res) {
     let { id, values, product } = req.body
     if (!id) return HR.error(res, 'id is required', 422)
     if (!values) return HR.error(res, 'values is required', 422)
     if (!product) return HR.error(res, 'product is required', 422)
+    const inv = await invoiceService.getById(id)
+    if (inv.status === 'paidup' || inv.status === 'submitted') {
+      return invoiceService.updateById(id, {
+        label: values.label
+      })
+        .then(invoice => {
+          return HR.send(res, invoice)
+        }).catch(reason => {
+          return HR.error(res, reason)
+        })
+    }
     invoiceService.updateInvoice(id, values, product)
       .then(invoice => {
         return HR.send(res, invoice)
