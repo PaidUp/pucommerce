@@ -13,7 +13,7 @@ export default class InvoiceCotroller {
       let status = event.data.object.status === 'succeeded' ? 'paidup' : 'failed'
       let values = { status }
       if (event.type === 'charge.succeeded') {
-        values['$push'] = event.data.object
+        values['$push'] = { attempts: event.data.object }
       } else if (event.type === 'charge.failed') {
         values['$push'] = {
           attempts: {
