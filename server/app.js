@@ -4,7 +4,6 @@ import config from './config/environment'
 import configExpress from './config/express'
 import routes from './routes'
 import { auth, Logger, Sequence, handlerBug } from 'pu-common'
-
 handlerBug.init(config.bugsnag)
 auth.config = config.auth
 Logger.setConfig(config.logger)

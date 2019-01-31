@@ -30,5 +30,10 @@ module.exports = {
     user: {
       url: 'https://devapi.getpaidup.com/api/v1/user'
     }
+  },
+  bugsnag: {
+    apiKey: '13fa1c9fc56101af4ecb42f06c14c17b',
+    projectRoot: '/app',
+    notifyReleaseStages: [ 'local', 'test', 'production', 'stage', 'develop' ]
   }
 }
