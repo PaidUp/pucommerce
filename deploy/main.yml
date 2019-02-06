@@ -38,7 +38,7 @@
       remote_src: yes
 
   - name: install node modules
-    shell: npm install
+    shell: npm install --loglevel=error
     args:
       chdir: '{{ workspace }}'
 
