@@ -2,6 +2,8 @@ import { invoiceService } from '@/services'
 import { HandlerResponse as HR } from 'pu-common'
 import Stripe from 'stripe'
 import config from '@/config/environment'
+import ZendeskService from '@/services/zendesk.service'
+
 const stripe = Stripe(config.stripe.key)
 
 export default class InvoiceCotroller {
@@ -21,6 +23,7 @@ export default class InvoiceCotroller {
             message: event.data.object.failure_message
           }
         }
+        ZendeskService.ticketsChargeFailed(event.data.object)
       }
       invoiceService.webhook({ id, values }).then(resp => {
         HR.send(res, {msg: 'charged'})

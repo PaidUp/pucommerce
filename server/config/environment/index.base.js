@@ -78,14 +78,18 @@ let all = {
     }
   },
   zendesk: {
+    urlBaseLink: 'http://localhost:8080/players',
     username: 'ricardo@getpaidup.com',
     token: '6ON1frWgVv8acTGZNnabBMjj500JZA8vmGK2rNeb',
     subdomain: 'getpaidup1478060212',
+    assignee: '373035927993',
     assigneeEmail: 'felipe@getpaidup.com',
     customFields: {
       preorderId: '360008982873',
       ticketReasonCategory: '48042408',
-      balance: '56485848'
+      balance: '56485848',
+      paymentLink: '80373287',
+      invoiceId: '360014425333'
     }
   },
   bugsnag: {
