@@ -13,7 +13,7 @@ export default class InvoiceCotroller {
     if (event.data && event.data.object && event.data.object.source && event.data.object.metadata._invoice && event.data.object.source.object === 'bank_account') {
       let id = event.data.object.metadata._invoice
       let status = event.data.object.status === 'succeeded' ? 'paidup' : 'failed'
-      let values = { status }
+      let values = { $set: {status} }
       if (event.type === 'charge.succeeded') {
         values['$push'] = { attempts: event.data.object }
       } else if (event.type === 'charge.failed') {
