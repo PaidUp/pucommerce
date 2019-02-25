@@ -73,17 +73,17 @@ export default class InvoiceCotroller {
     if (!id) return HR.error(res, 'id is required', 422)
     if (!values) return HR.error(res, 'values is required', 422)
     if (!product) return HR.error(res, 'product is required', 422)
-    const inv = await invoiceService.getById(id)
-    if (inv.status === 'paidup' || inv.status === 'submitted') {
-      return invoiceService.updateById(id, {
-        label: values.label
-      })
-        .then(invoice => {
-          return HR.send(res, invoice)
-        }).catch(reason => {
-          return HR.error(res, reason)
-        })
-    }
+    // const inv = await invoiceService.getById(id)
+    // if (inv.status === 'paidup' || inv.status === 'submitted') {
+    //   return invoiceService.updateById(id, {
+    //     label: values.label
+    //   })
+    //     .then(invoice => {
+    //       return HR.send(res, invoice)
+    //     }).catch(reason => {
+    //       return HR.error(res, reason)
+    //     })
+    // }
     invoiceService.updateInvoice(id, values, product)
       .then(invoice => {
         return HR.send(res, invoice)
