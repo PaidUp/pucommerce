@@ -27,7 +27,7 @@
   "author": "@paidUp",
   "license": "private",
   "dependencies": {
-    "axios": "^0.17.1",
+    "axios": "^0.21.1",
     "body-parser": "^1.14.1",
     "camelize": "^1.0.0",
     "composable-middleware": "^0.3.0",
